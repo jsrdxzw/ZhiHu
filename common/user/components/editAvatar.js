@@ -40,7 +40,6 @@ class EditAvatarPage extends React.PureComponent{
                      width: 48,
                      height: 48,
                      cropping: true,
-                     cropperActiveWidgetColor:true,
                      showCropGuidelines:true,
                      includeBase64:true,
                      compressImageMaxWidth:48,
