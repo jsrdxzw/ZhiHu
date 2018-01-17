@@ -1,0 +1,3 @@
+rootProject.name = 'Zhi3'
+
+include ':app'
