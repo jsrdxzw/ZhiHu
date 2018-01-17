@@ -37,6 +37,7 @@ const tabNavigator = TabNavigator({
     tabBarComponent: TabBarBottom,
     tabBarPosition: 'bottom',
     swipeEnabled: false, //can swipe
+    animationEnabled:false,
     tabBarOptions: {
         activeTintColor: '#1890ff'
     }

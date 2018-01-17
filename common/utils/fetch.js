@@ -1,6 +1,6 @@
 import {Toast} from 'antd-mobile';
 
-const baseUrl = 'http://127.0.0.1:3000'; //api的服务器地址
+const baseUrl = 'http://192.168.1.89:3000'; //api的服务器地址
 
 const fetchURL = (subUrl, method, params) => {
     const url = baseUrl + subUrl;
@@ -21,8 +21,6 @@ const fetchURL = (subUrl, method, params) => {
                     Toast.hide();
                 }
                 return Promise.resolve(resJson)
-            },err=>{
-                Toast.hide();
             }).catch(err => {
                 Toast.hide();
                 return Promise.reject(err)
@@ -37,8 +35,6 @@ const fetchURL = (subUrl, method, params) => {
                     Toast.hide();
                 }
                 return Promise.resolve(resJson)
-            },err=>{
-                Toast.hide();
             }).catch(err => {
                 Toast.hide();
                 return Promise.reject(err)

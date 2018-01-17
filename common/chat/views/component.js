@@ -18,20 +18,6 @@ export default class Chat extends React.Component{
         }
     };
 
-    componentDidMount(){
-        this.getLocation()
-    }
-
-    getLocation(){
-        navigator.geolocation.getCurrentPosition(location=>{
-            const longitude = location.coords.longitude;
-            const latitude = location.coords.latitude;
-        },err=>{
-            alert('location error')
-        })
-    }
-
-
     render(){
         const {user} = this.props;
         return(

@@ -1,6 +1,7 @@
 import React from 'react';
 import {FlatList, Platform, Text, View, ActivityIndicator,StyleSheet} from 'react-native';
 import {setUserLocation, getNearUsers} from '../../utils/rest';
+import {Toast} from 'antd-mobile';
 import ChatItem from "./chat-item";
 
 export default class ChatList extends React.Component {
@@ -76,9 +77,7 @@ export default class ChatList extends React.Component {
                 })
                 .catch(err => {})
         }, err => {
-            this.setState({
-                emptyMsg: '定位失败'
-            })
+            Toast.info('定位失败',1)
         })
     }
 
@@ -108,6 +107,10 @@ export default class ChatList extends React.Component {
                 ) : null}
             />
         )
+    }
+
+    componentWillUnmount(){
+        Toast.hide()
     }
 }
 
