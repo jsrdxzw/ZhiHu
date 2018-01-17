@@ -11,13 +11,14 @@ import KeyboardSpacer from 'react-native-keyboard-spacer';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {connect} from 'react-redux';
 import MessageItem from "./message-item";
+import {sendMessage} from '../actions';
 
 class ChatPage extends React.Component {
 
     static navigationOptions = ({navigation}) => {
         const {params = {}} = navigation.state;
         return {
-            title: params.user.name,
+            title: params.receiver.name,
             headerRight:
                 <TouchableOpacity>
                     <Icon name={'ios-person'} size={26}
@@ -28,16 +29,12 @@ class ChatPage extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            messages: [],
-            count: 0
-        };
         this.sendMessage = this.sendMessage.bind(this);
     }
 
     componentWillMount() {
-        const {user} = this.props.navigation.state.params;
-        this.props.navigation.setParams({user:user})
+        const {receiver} = this.props.navigation.state.params;
+        this.props.navigation.setParams({receiver:receiver})
     }
 
     /** 2018/1/17
@@ -45,17 +42,16 @@ class ChatPage extends React.Component {
      * function:表示我发了一个消息
      */
     sendMessage(text) {
-        const {user} = this.props;
-        this.setState({
-            messages:[...this.state.messages,{content:text,sender:user}]
-        })
+        const {receiver} = this.props.navigation.state.params;
+        this.props.sendMessage(text,receiver._id)
     }
 
     render() {
+
         return (
             <View style={styles.container}>
                 <FlatList
-                    data={this.state.messages}
+                    data={this.props.messages.messages}
                     keyExtractor={(item,index) => item._id||index}
                     renderItem={({item}) => <MessageItem message={item}/>}
                     ListEmptyComponent={
@@ -71,11 +67,16 @@ class ChatPage extends React.Component {
 
 const mapStateToProps = state=>{
     return{
-        user:state.user
+        messages:state.messages
+    }
+};
+const mapStateFromProps = dispatch=>{
+    return {
+        sendMessage:(content,receiver)=>dispatch(sendMessage(content,receiver))
     }
 };
 
-export default connect(mapStateToProps,null)(ChatPage)
+export default connect(mapStateToProps,mapStateFromProps)(ChatPage)
 
 const styles = StyleSheet.create({
     container: {

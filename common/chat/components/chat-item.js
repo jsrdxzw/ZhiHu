@@ -10,7 +10,7 @@ class ChatItem extends React.PureComponent {
     }
 
     gotoDetailChatView(){
-        this.props.navigation.navigate('ChatDetailPage',{user:this.props.user})
+        this.props.navigation.navigate('ChatDetailPage',{receiver:this.props.user})
     }
 
     render() {

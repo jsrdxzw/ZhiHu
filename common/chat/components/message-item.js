@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     rightTextContainer:{
         borderRadius: 4,
         backgroundColor: '#73d13d',
-        padding: 5,
+        padding: 8,
         borderRightColor:'transparent'
     },
     textStyle: {
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     leftTextContainer:{
         borderRadius: 4,
         backgroundColor: '#fafafa',
-        padding: 5,
+        padding: 8,
         borderLeftColor:'transparent'
     },
     triangleRight: {

@@ -537,4 +537,37 @@ export const getNearUsers = (longitude,latitude,skipCount)=>{
 };
 
 
+export const sendMyMessage = (content,sender,receiver)=>{
+    return fetchUrl('/api/chat/sendMessage','post',{content,sender,receiver})
+        .then(res=>{
+            const {err} = res;
+            if(!err){
+                return Promise.resolve()
+            } else {
+                return Promise.reject('err')
+            }
+        }).catch(err=>{
+            return Promise.reject('err')
+        })
+};
+
+/** 2018/1/17
+ * author: XU ZHI WEI
+ * function:获得历史聊天记录，默认每次显示15条
+ */
+export const getHistoryMessage = (sender,receiver,skipCount=0)=>{
+    return fetchUrl(`/api/chat/historyMessage?sender=${sender}&receiver=${receiver}&skipCount=${skipCount}`)
+        .then(res=>{
+            const {err,count,data} = res;
+            if(!err){
+                return Promise.resolve({count,data})
+            }else {
+                return Promise.reject('err')
+            }
+        }).catch(err=>{
+            return Promise.reject('err')
+        })
+};
+
+
 
