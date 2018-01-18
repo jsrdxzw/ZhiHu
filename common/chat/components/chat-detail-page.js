@@ -11,7 +11,7 @@ import KeyboardSpacer from 'react-native-keyboard-spacer';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {connect} from 'react-redux';
 import MessageItem from "./message-item";
-import {sendMessage} from '../actions';
+import {sendMessage,getHistoryMessage} from '../actions';
 
 class ChatPage extends React.Component {
 
@@ -30,11 +30,17 @@ class ChatPage extends React.Component {
     constructor(props) {
         super(props);
         this.sendMessage = this.sendMessage.bind(this);
+        this.refresh = this.refresh.bind(this);
+        this.chatUser = this.props.navigation.state.params.receiver;
+
     }
 
     componentWillMount() {
-        const {receiver} = this.props.navigation.state.params;
-        this.props.navigation.setParams({receiver:receiver})
+        this.props.navigation.setParams({receiver:this.chatUser})
+    }
+
+    componentDidMount(){
+        this.refresh()
     }
 
     /** 2018/1/17
@@ -42,8 +48,15 @@ class ChatPage extends React.Component {
      * function:表示我发了一个消息
      */
     sendMessage(text) {
-        const {receiver} = this.props.navigation.state.params;
-        this.props.sendMessage(text,receiver._id)
+        this.props.sendMessage(text,this.chatUser._id)
+    }
+
+    /** 2018/1/18
+     * author: XU ZHI WEI
+     * function: 加载历史数据
+     */
+    refresh(){
+        this.props.getHistoryMessage(this.chatUser._id);
     }
 
     render() {
@@ -51,9 +64,11 @@ class ChatPage extends React.Component {
         return (
             <View style={styles.container}>
                 <FlatList
+                    onRefresh={this.refresh}
+                    refreshing={this.props.messages.loading}
                     data={this.props.messages.messages}
                     keyExtractor={(item,index) => item._id||index}
-                    renderItem={({item}) => <MessageItem message={item}/>}
+                    renderItem={({item}) => <MessageItem message={item} chatUser={this.chatUser}/>}
                     ListEmptyComponent={
                         <View style={styles.emptyContainer}><Text>没有任何消息</Text></View>
                     }
@@ -72,7 +87,8 @@ const mapStateToProps = state=>{
 };
 const mapStateFromProps = dispatch=>{
     return {
-        sendMessage:(content,receiver)=>dispatch(sendMessage(content,receiver))
+        sendMessage:(content,receiver)=>dispatch(sendMessage(content,receiver)),
+        getHistoryMessage:(sender)=>dispatch(getHistoryMessage(sender))
     }
 };
 

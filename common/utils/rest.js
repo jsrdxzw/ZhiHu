@@ -555,8 +555,8 @@ export const sendMyMessage = (content,sender,receiver)=>{
  * author: XU ZHI WEI
  * function:获得历史聊天记录，默认每次显示15条
  */
-export const getHistoryMessage = (sender,receiver,skipCount=0)=>{
-    return fetchUrl(`/api/chat/historyMessage?sender=${sender}&receiver=${receiver}&skipCount=${skipCount}`)
+export const getMyHistoryMessage = (sender,receiver,skipCount=0)=>{
+    return fetchUrl(`/api/chat/historyMessage?sender=${sender}&receiver=${receiver}&skipCount=${skipCount}`,'get')
         .then(res=>{
             const {err,count,data} = res;
             if(!err){

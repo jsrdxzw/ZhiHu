@@ -17,6 +17,7 @@ class MessageItem extends React.PureComponent {
     }
 
     rightView(message) {
+        const {user} = this.props;
         return (
             <View style={styles.rightViewStyle}>
                 <View style={styles.rightTextContainer}>
@@ -24,17 +25,18 @@ class MessageItem extends React.PureComponent {
                 </View>
                 <View style={styles.triangleRight}/>
                 <Image style={styles.avatarStyle}
-                       source={{uri: `data:image/png;base64,${message.sender.avatar}`}}
+                       source={{uri: `data:image/png;base64,${user.avatar}`}}
                 />
             </View>
         )
     }
 
     leftView(message) {
+        const {chatUser} = this.props;
         return (
             <View style={styles.leftViewStyle}>
                 <Image style={styles.avatarStyle}
-                       source={{uri: `data:image/png;base64,${message.sender.avatar}`}}
+                       source={{uri: `data:image/png;base64,${chatUser.avatar}`}}
                 />
                 <View style={styles.triangleLeft}/>
 
