@@ -1,4 +1,5 @@
 import {sendMyMessage, getMyHistoryMessage} from '../utils/rest';
+import moment from 'moment';
 
 const SEND_MESSAGE = 'SEND_MESSAGE';
 const GET_HISTORY_MESSAGE = 'GET_HISTORY_MESSAGE';
@@ -13,15 +14,15 @@ function send_message(content, sender) {
 
 function loading_more(loading) {
     return {
-        type:LOADING_MORE,
-        loading:loading
+        type: LOADING_MORE,
+        loading: loading
     }
 }
 
 function get_history_message(count, data) {
     return {
         type: GET_HISTORY_MESSAGE,
-        payload: {count,data}
+        payload: {count, data}
     }
 }
 
@@ -37,12 +38,11 @@ export const sendMessage = (content, receiver) => {
 };
 
 export const getHistoryMessage = (sender) => {
-
     return (dispatch, getState) => {
         const receiver = getState().user._id;
         const count = getState().messages.count;
         const loadLength = getState().messages.messages.length;
-        if(count>loadLength || loadLength===0) {
+        if (count > loadLength || loadLength === 0) {
             dispatch(loading_more(true));
             getMyHistoryMessage(sender, receiver, loadLength)
                 .then(({count, data}) => {

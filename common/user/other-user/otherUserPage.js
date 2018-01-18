@@ -96,7 +96,7 @@ export default class OtherUserPage extends React.PureComponent {
                                   type={'question'} userId={user._id}/>
                         <ItemCard title={'他的关注'} to={'myQuestionList'} navigation={this.props.navigation}
                                   type={'concern'} userId={user._id}/>
-                        <ItemCard title={'他的回答'}/>
+                        <ItemCard title={'他的回答'} to={'myQuestionList'} navigation={this.props.navigation} type={'answer'} userId={user._id}/>
                     </View>
                 </View>
             </ScrollView>

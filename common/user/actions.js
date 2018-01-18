@@ -1,5 +1,6 @@
 import fetchUrl from '../utils/fetch';
 import {AsyncStorage} from 'react-native';
+import {connectSocket,disConnectSocket} from '../utils/websocket';
 
 const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 const GET_USER_LOCAL = 'GET_USER_LOCAL';
@@ -86,6 +87,7 @@ function editSpecialists(specialists) {
 export const getUserFromLocal = () => {
     return dispatch => {
         AsyncStorage.getItem('user').then(res => {
+            connectSocket(JSON.parse(res)._id);
             dispatch(getUserLocally(JSON.parse(res)))
         }).catch(err => {
             dispatch(getUserLocally({}))

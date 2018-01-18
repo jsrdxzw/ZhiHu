@@ -560,7 +560,16 @@ export const getMyHistoryMessage = (sender,receiver,skipCount=0)=>{
         .then(res=>{
             const {err,count,data} = res;
             if(!err){
-                return Promise.resolve({count,data})
+                const newData = data;
+                for(let i=0;i<data.length-1;i++){
+                    const diff = moment().diff(newData[i+1].created_at,newData[i].created_at);
+                    if(1000*60*5<diff<1000*60*60*24){
+                        newData[i+1] = {...newData[i+1],time:moment(newData[i+1].created_at).format('a h:mm')}
+                    } else {
+                        newData[i+1] = {...newData[i+1],time:moment(newData[i+1].created_at).format('lll')}
+                    }
+                }
+                return Promise.resolve({count,data:newData})
             }else {
                 return Promise.reject('err')
             }

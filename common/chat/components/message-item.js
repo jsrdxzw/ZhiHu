@@ -1,12 +1,28 @@
 import React from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
+import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import {connect} from 'react-redux';
+import {withNavigation} from 'react-navigation';
 
 class MessageItem extends React.PureComponent {
+    constructor(props){
+        super(props);
+        this.gotoDetailUser = this.gotoDetailUser.bind(this);
+    }
+
+    gotoDetailUser(){
+        this.props.navigation.navigate('otherUserPage',{user:this.props.chatUser})
+    }
+
     render() {
         const {message} = this.props;
         return (
             <View style={styles.container}>
+                {message.time
+                &&
+                <View style={styles.timeContainerStyle}>
+                    <Text style={styles.timeTextStyle}>{message.time}</Text>
+                </View>
+                }
                 {this.ifYourself(message) ?
                     this.rightView(message)
                     :
@@ -35,15 +51,16 @@ class MessageItem extends React.PureComponent {
         const {chatUser} = this.props;
         return (
             <View style={styles.leftViewStyle}>
-                <Image style={styles.avatarStyle}
-                       source={{uri: `data:image/png;base64,${chatUser.avatar}`}}
-                />
+                <TouchableOpacity activeOpacity={1} onPress={this.gotoDetailUser}>
+                    <Image style={styles.avatarStyle}
+                           source={{uri: `data:image/png;base64,${chatUser.avatar}`}}
+                    />
+                </TouchableOpacity>
                 <View style={styles.triangleLeft}/>
 
                 <View style={styles.leftTextContainer}>
                     <Text style={styles.textStyle}>{message.content}</Text>
                 </View>
-
             </View>
         )
     }
@@ -59,23 +76,33 @@ const mapStateToProps = state => {
     }
 };
 
-export default connect(mapStateToProps, null)(MessageItem)
+export default connect(mapStateToProps, null)(withNavigation(MessageItem))
 
 const styles = StyleSheet.create({
     container: {
         marginTop: 10,
         paddingHorizontal: 10
     },
+    timeContainerStyle: {
+        alignSelf: 'center',
+        backgroundColor: '#f5f5f5',
+        padding: 4,
+        borderRadius: 4,
+        marginBottom: 10
+    },
+    timeTextStyle: {
+        fontSize: 10
+    },
     avatarStyle: {
         width: 32,
         height: 32,
         resizeMode: Image.resizeMode.contain
     },
-    rightTextContainer:{
+    rightTextContainer: {
         borderRadius: 4,
         backgroundColor: '#73d13d',
         padding: 8,
-        borderRightColor:'transparent'
+        borderRightColor: 'transparent'
     },
     textStyle: {
         color: '#262626',
@@ -85,16 +112,16 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         alignItems: 'center',
     },
-    leftViewStyle:{
+    leftViewStyle: {
         flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'center',
     },
-    leftTextContainer:{
+    leftTextContainer: {
         borderRadius: 4,
         backgroundColor: '#fafafa',
         padding: 8,
-        borderLeftColor:'transparent'
+        borderLeftColor: 'transparent'
     },
     triangleRight: {
         width: 0,
@@ -110,7 +137,7 @@ const styles = StyleSheet.create({
         borderTopColor: 'transparent',
         borderBottomColor: 'transparent',
     },
-    triangleLeft:{
+    triangleLeft: {
         width: 0,
         height: 0,
         backgroundColor: 'transparent',

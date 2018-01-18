@@ -8,17 +8,22 @@ const action = NavigationActions.reset({
     ]
 });
 
-export default class WelcomePage extends React.PureComponent{
+export default class WelcomePage extends React.PureComponent {
+    constructor(props) {
+        super(props);
+    }
+
     static navigationOptions = {
         header: null
     };
-    componentDidMount(){
-        this.props.getUserFromLocal();
+
+    componentDidMount() {
         this.timer = setTimeout(() => {
             this.props.navigation.dispatch(action)
-        },100);
+        }, 100);
     }
-    render(){
+
+    render() {
         return null
     }
 

@@ -1,6 +1,6 @@
 import User from './component';
 import {connect} from 'react-redux';
-import {login,logout} from '../actions';
+import {login,logout,getUserFromLocal} from '../actions';
 
 const mapStateToProps = state => {
   return {
@@ -11,7 +11,8 @@ const mapStateToProps = state => {
 const mapStateFromProps = dispatch => {
     return {
         login:(studentID,password)=>dispatch(login(studentID,password)),
-        logout:()=>dispatch(logout())
+        logout:()=>dispatch(logout()),
+        getUserFromLocal:()=>dispatch(getUserFromLocal())
     }
 };
 

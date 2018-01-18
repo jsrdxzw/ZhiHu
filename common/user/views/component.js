@@ -30,6 +30,10 @@ export default class UserCenter extends React.Component {
         this.logout = this.logout.bind(this);
     }
 
+    componentDidMount(){
+        this.props.getUserFromLocal()
+    }
+
     /** 2017/12/22
      * author: XU ZHI WEI
      * function: 显示登录的模态框
