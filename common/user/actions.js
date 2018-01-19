@@ -102,7 +102,8 @@ export const login = (studentID, password) => {
             const {err, data} = res;
             if (!err) {
                 AsyncStorage.setItem('user', JSON.stringify({...data, isLogin: true})).then(() => {
-                    dispatch(loginSuccess(data))
+                    dispatch(loginSuccess(data));
+                    connectSocket(data._id);
                 }).catch(() => {
                     alert('本地存错误')
                 })

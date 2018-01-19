@@ -11,7 +11,7 @@ const reducer = (state=initState,action)=>{
         case 'LOADING_MORE':
             return {...state,loading:action.loading};
         case 'GET_HISTORY_MESSAGE':
-            return {...state,messages:[...state.messages,...action.payload.data],count:state.count+action.payload.count,loading:false};
+            return {...state,messages:[...action.payload.data,...state.messages],count:state.count+action.payload.count,loading:false};
         default:
             return state;
     }

@@ -302,9 +302,9 @@ export const agreeDisagreeComment = (comment_id, to_id, status) => {
  * author: XU ZHI WEI
  * function:提交子评论
  */
-export const submitSubComment = (content, comment_id,to_user) => {
+export const submitSubComment = (content, comment_id, to_user) => {
     const from_user = Store.getState().user._id;
-    return fetchUrl('/api/subcomment/submitsubcomment', 'post', {comment_id, content, from_user,to_user})
+    return fetchUrl('/api/subcomment/submitsubcomment', 'post', {comment_id, content, from_user, to_user})
         .then(res => {
             const {err, data} = res;
             if (!err) {
@@ -350,7 +350,7 @@ export const refreshSubComments = (comment_id) => {
 };
 
 
-export const getSearchQuestion = (keyword,skipCount)=>{
+export const getSearchQuestion = (keyword, skipCount) => {
     return fetchUrl(`/api/question/searchQuestion?skipCount=${skipCount}&keyword=${keyword}`, 'get')
         .then(res => {
             const {err, data, count} = res;
@@ -368,10 +368,10 @@ export const getSearchQuestion = (keyword,skipCount)=>{
 };
 
 
-export const refreshRecommendUser = (keyword)=>{
+export const refreshRecommendUser = (keyword) => {
     const from_user = Store.getState().user._id;
-    return fetchUrl(`/api/user/recommendUser?skipCount=0&from_user=${from_user}&keyword=${keyword}`,'get')
-        .then(res=>{
+    return fetchUrl(`/api/user/recommendUser?skipCount=0&from_user=${from_user}&keyword=${keyword}`, 'get')
+        .then(res => {
             const {err, data, count} = res;
             if (!err && data.length) {
                 return Promise.resolve({data, count})
@@ -383,10 +383,10 @@ export const refreshRecommendUser = (keyword)=>{
         })
 };
 
-export const getRecommendUser = (keyword,skipCount)=>{
+export const getRecommendUser = (keyword, skipCount) => {
     const from_user = Store.getState().user._id;
-    return fetchUrl(`/api/user/recommendUser?skipCount=${skipCount}&from_user=${from_user}&keyword=${keyword}`,'get')
-        .then(res=>{
+    return fetchUrl(`/api/user/recommendUser?skipCount=${skipCount}&from_user=${from_user}&keyword=${keyword}`, 'get')
+        .then(res => {
             const {err, data, count} = res;
             if (!err && data.length) {
                 return Promise.resolve({data, count})
@@ -397,24 +397,23 @@ export const getRecommendUser = (keyword,skipCount)=>{
             return Promise.reject('error')
         })
 };
-
 
 
 /** 2018/1/13
  * author: XU ZHI WEI
  * function:邀请别人回答问题
  */
-export const inviteOther = (questionId,to_user)=>{
+export const inviteOther = (questionId, to_user) => {
     const from_user = Store.getState().user._id;
-    return fetchUrl('/api/notification/inviteOther','post',{from_user,to_user,questionId})
-        .then(res=>{
+    return fetchUrl('/api/notification/inviteOther', 'post', {from_user, to_user, questionId})
+        .then(res => {
             const {err} = res;
-            if(!err){
+            if (!err) {
                 return Promise.resolve()
-            }else {
+            } else {
                 return Promise.reject('err')
             }
-        }).catch(err=>{
+        }).catch(err => {
             return Promise.reject('err')
         })
 };
@@ -424,7 +423,7 @@ export const inviteOther = (questionId,to_user)=>{
  * author: XU ZHI WEI
  * function:获得消息
  */
-export const getNotification = (type,skipCount)=>{
+export const getNotification = (type, skipCount) => {
     const userId = Store.getState().user._id;
     return fetchUrl(`/api/notification/${type}Notification?skipCount=${skipCount}&to_user=${userId}`, 'get')
         .then(res => {
@@ -443,16 +442,16 @@ export const getNotification = (type,skipCount)=>{
 };
 
 
-export const refreshNotification = (type)=>{
+export const refreshNotification = (type) => {
     const userId = Store.getState().user._id;
-    return fetchUrl(`/api/notification/${type}Notification?skipCount=0&to_user=${userId}`,'get')
-        .then(res=>{
+    return fetchUrl(`/api/notification/${type}Notification?skipCount=0&to_user=${userId}`, 'get')
+        .then(res => {
             const {err, data, count} = res;
             const newData = data.map(notification => (
                 {...notification, from_now: moment(notification.created_at).fromNow()}
             ));
             if (!err && data.length) {
-                return Promise.resolve({data:newData, count})
+                return Promise.resolve({data: newData, count})
             } else {
                 return Promise.reject('error')
             }
@@ -466,87 +465,87 @@ export const refreshNotification = (type)=>{
  * author: XU ZHI WEI
  * function:删除某条通知
  */
-export const deleteNotification = (notification_id,type)=>{
-    return fetchUrl(`/api/notification/deleteone${type}notification`,'post',{
+export const deleteNotification = (notification_id, type) => {
+    return fetchUrl(`/api/notification/deleteone${type}notification`, 'post', {
         notification_id
-    }).then(res=>{
+    }).then(res => {
         const {err} = res;
-        if(!err){
+        if (!err) {
             return Promise.resolve()
         } else {
             return Promise.reject('err')
         }
-    }).catch(err=>{
+    }).catch(err => {
         return Promise.reject('err')
     })
 };
 
-export const deleteAllNotification = (type)=>{
+export const deleteAllNotification = (type) => {
     const user_id = Store.getState().user._id;
-    return fetchUrl(`/api/notification/deleteall${type}notification`,'post',{
+    return fetchUrl(`/api/notification/deleteall${type}notification`, 'post', {
         user_id
-    }).then(res=>{
+    }).then(res => {
         const {err} = res;
-        if(!err){
+        if (!err) {
             return Promise.resolve()
         } else {
             return Promise.reject('err')
         }
-    }).catch(err=>{
+    }).catch(err => {
         return Promise.reject('err')
     })
 };
 
-export const setUserLocation = (longitude,latitude)=>{
+export const setUserLocation = (longitude, latitude) => {
     const user_id = Store.getState().user._id;
-    return fetchUrl(`/api/user/setUserLocation`,'post',{
+    return fetchUrl(`/api/user/setUserLocation`, 'post', {
         user_id,
         longitude,
         latitude
-    }).then(res=>{
-        const {err,location} = res;
-        if(!err){
+    }).then(res => {
+        const {err, location} = res;
+        if (!err) {
             return Promise.resolve(location)
         } else {
             return Promise.reject('err')
         }
-    }).catch(err=>{
+    }).catch(err => {
         return Promise.reject('err')
     })
 };
 
-export const getNearUsers = (longitude,latitude,skipCount)=>{
+export const getNearUsers = (longitude, latitude, skipCount) => {
     const user_id = Store.getState().user._id;
-    return fetchUrl(`/api/chat/nearUsers?skipCount${skipCount}`,'post',{
+    return fetchUrl(`/api/chat/nearUsers?skipCount${skipCount}`, 'post', {
         user_id,
         longitude,
         latitude
-    }).then(res=>{
-        const {err,count,data} = res;
-        if(!err){
-            const newData = data.map(user=>{
-               return {...user,distance:getDistance(latitude,longitude,user.loc[1],user.loc[0])}
+    }).then(res => {
+        const {err, count, data} = res;
+        if (!err) {
+            const newData = data.map(user => {
+                return {...user, distance: getDistance(latitude, longitude, user.loc[1], user.loc[0])}
             });
-            return Promise.resolve({count,data:newData})
+            return Promise.resolve({count, data: newData})
         } else {
             return Promise.reject('err')
         }
-    }).catch(err=>{
+    }).catch(err => {
         return Promise.reject('err')
     })
 };
 
 
-export const sendMyMessage = (content,sender,receiver)=>{
-    return fetchUrl('/api/chat/sendMessage','post',{content,sender,receiver})
-        .then(res=>{
+export const sendMyMessage = (content, sender, receiver) => {
+    return fetchUrl('/api/chat/sendMessage', 'post', {content, sender, receiver})
+        .then(res => {
             const {err} = res;
-            if(!err){
+            if (!err) {
                 return Promise.resolve()
             } else {
                 return Promise.reject('err')
             }
-        }).catch(err=>{
+        }).catch(err => {
             return Promise.reject('err')
         })
 };
@@ -555,25 +554,30 @@ export const sendMyMessage = (content,sender,receiver)=>{
  * author: XU ZHI WEI
  * function:获得历史聊天记录，默认每次显示15条
  */
-export const getMyHistoryMessage = (sender,receiver,skipCount=0)=>{
-    return fetchUrl(`/api/chat/historyMessage?sender=${sender}&receiver=${receiver}&skipCount=${skipCount}`,'get')
-        .then(res=>{
-            const {err,count,data} = res;
-            if(!err){
+export const getMyHistoryMessage = (sender, receiver, skipCount = 0) => {
+    return fetchUrl(`/api/chat/historyMessage?sender=${sender}&receiver=${receiver}&skipCount=${skipCount}`, 'get')
+        .then(res => {
+            const {err, count, data} = res;
+            if (!err) {
                 const newData = data;
-                for(let i=0;i<data.length-1;i++){
-                    const diff = moment().diff(newData[i+1].created_at,newData[i].created_at);
-                    if(1000*60*5<diff<1000*60*60*24){
-                        newData[i+1] = {...newData[i+1],time:moment(newData[i+1].created_at).format('a h:mm')}
-                    } else {
-                        newData[i+1] = {...newData[i+1],time:moment(newData[i+1].created_at).format('lll')}
+                for (let i = 1; i < data.length; i++) {
+                    const diff = moment(newData[i].created_at).diff(moment(newData[i-1].created_at), 'minutes');
+                    if (diff>=5  && diff<60 * 24) {
+                        newData[i] = {...newData[i], time: moment(newData[i].created_at).format('a h:mm')};
+                        continue;
+                    }
+                    if (diff >= 60 * 24) {
+                        newData[i] = {...newData[i], time: moment(newData[i].created_at).format('lll')};
                     }
                 }
-                return Promise.resolve({count,data:newData})
-            }else {
-                return Promise.reject('err')
+                return Promise.resolve({count, data: newData})
             }
-        }).catch(err=>{
+            else
+                {
+                    return Promise.reject('err')
+                }
+            }
+        ).catch(err => {
             return Promise.reject('err')
         })
 };

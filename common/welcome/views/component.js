@@ -11,6 +11,7 @@ const action = NavigationActions.reset({
 export default class WelcomePage extends React.PureComponent {
     constructor(props) {
         super(props);
+        this.timer = null;
     }
 
     static navigationOptions = {

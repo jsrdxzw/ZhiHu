@@ -80,7 +80,7 @@ export default connect(mapStateToProps, null)(withNavigation(MessageItem))
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: 10,
+        marginBottom: 15,
         paddingHorizontal: 10
     },
     timeContainerStyle: {
@@ -102,7 +102,8 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         backgroundColor: '#73d13d',
         padding: 8,
-        borderRightColor: 'transparent'
+        borderRightColor: 'transparent',
+        marginLeft:50
     },
     textStyle: {
         color: '#262626',
@@ -121,7 +122,8 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         backgroundColor: '#fafafa',
         padding: 8,
-        borderLeftColor: 'transparent'
+        borderLeftColor: 'transparent',
+        marginRight:50
     },
     triangleRight: {
         width: 0,
