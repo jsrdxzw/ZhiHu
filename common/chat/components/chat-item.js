@@ -5,17 +5,32 @@ import {connect} from 'react-redux';
 
 class ChatItem extends React.PureComponent {
 
-    constructor(props){
+    constructor(props) {
         super(props);
+        this.state = {
+            unReadCount: 0
+        };
         this.gotoDetailChatView = this.gotoDetailChatView.bind(this);
     }
 
-    gotoDetailChatView(){
-        this.props.navigation.navigate('ChatDetailPage',{receiver:this.props.user})
+    gotoDetailChatView() {
+        if(this.state.unReadCount){
+            this.setState({
+                unReadCount:0
+            });
+        }
+        this.props.navigation.navigate('ChatDetailPage', {receiver: this.props.user})
     }
 
-    componentWillReceiveProps(nextProps){
+    componentWillReceiveProps(nextProps) {
+        if ((nextProps.messages.messages && !nextProps.messages.currentChatter) || (nextProps.messages.messages && nextProps.messages.currentChatter !== this.props.user._id)) {
 
+            if (nextProps.messages.messages.sender === this.props.user._id) {
+                this.setState((prevState, props) => ({
+                    unReadCount: prevState.unReadCount + 1
+                }));
+            }
+        }
     }
 
     render() {
@@ -33,9 +48,11 @@ class ChatItem extends React.PureComponent {
                                   numberOfLines={2}>{user.speciality && user.speciality.join(',')}</Text>
                         </View>
                     </View>
-                    <View style={styles.circleContainer}>
-                        <Text style={styles.circleTextStyle}>1</Text>
-                    </View>
+                    {this.state.unReadCount ?
+                        <View style={styles.circleContainer}>
+                            <Text style={styles.circleTextStyle}>{this.state.unReadCount}</Text>
+                        </View> : null
+                    }
                     <Text style={styles.rightTextStyle}>{user.distance}</Text>
                 </View>
             </TouchableOpacity>
@@ -43,12 +60,13 @@ class ChatItem extends React.PureComponent {
     }
 }
 
-const mapStateToProps = state=>{
-   return {
-       messages:state.messages
-   }
+const mapStateToProps = state => {
+    return {
+        messages: state.messages
+    }
 };
-export default connect(mapStateToProps,null)(withNavigation(ChatItem))
+
+export default connect(mapStateToProps, null)(withNavigation(ChatItem))
 
 const styles = StyleSheet.create({
     container: {
@@ -78,18 +96,18 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: '#8c8c8c',
     },
-    circleContainer:{
-        backgroundColor:'#f5222d',
-        minWidth:16,
-        padding:2,
-        alignItems:'center',
-        borderRadius:4,
-        marginRight:10
+    circleContainer: {
+        backgroundColor: '#f5222d',
+        minWidth: 16,
+        padding: 2,
+        alignItems: 'center',
+        borderRadius: 4,
+        marginRight: 10
     },
-    circleTextStyle:{
-        color:'#fff',
-        fontSize:12,
-        fontWeight:'800'
+    circleTextStyle: {
+        color: '#fff',
+        fontSize: 12,
+        fontWeight: '800'
     },
     specialistsStyle: {
         marginTop: 5,
