@@ -1,21 +1,38 @@
 import io from 'socket.io-client';
-
-const baseUrl = 'http://10.0.1.5:3000/chat';
+import {actions} from '../chat';
+import Store from '../Store';
+const baseUrl = 'http://10.249.41.12:3000/chat';
 
 let socket = null;
 
+
 function startListener() {
     if (socket) {
-        socket.emit('my other event', {my: 'data12'});
+        socket.on('receiver message', function(data){
+            if(data){
+                Store.dispatch( actions.receive_message_intime(data))
+            }
+        });
     }
 }
 
 export const connectSocket = (id) => {
     socket = io.connect(baseUrl);
+    socket.emit('join room',{id});
     startListener()
 };
 
-export const disConnectSocket = () => {
+export const disConnectSocket = (id) => {
+    socket.emit('leave room',id);
     socket.disconnect();
     socket = null;
 };
+
+export const sendMessage = (sender,receiver,message)=>{
+     if(socket){
+         socket.emit('send message',{sender,receiver,message})
+     }
+};
+
+
+

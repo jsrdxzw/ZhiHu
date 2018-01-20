@@ -1,6 +1,7 @@
 import fetchUrl from './fetch';
 import Store from '../Store';
 import moment from "moment/moment";
+import {sendMessage} from './websocket';
 import {getDistance} from './math';
 
 /** 2018/1/7
@@ -536,7 +537,12 @@ export const getNearUsers = (longitude, latitude, skipCount) => {
 };
 
 
+/** 2018/1/19
+ * author: XU ZHI WEI
+ * function:发送消息到数据库和socketio
+ */
 export const sendMyMessage = (content, sender, receiver) => {
+    sendMessage(sender,receiver,content);
     return fetchUrl('/api/chat/sendMessage', 'post', {content, sender, receiver})
         .then(res => {
             const {err} = res;

@@ -4,6 +4,8 @@ import moment from 'moment';
 const SEND_MESSAGE = 'SEND_MESSAGE';
 const GET_HISTORY_MESSAGE = 'GET_HISTORY_MESSAGE';
 const LOADING_MORE = 'LOADING_MORE';
+const RECEIVE_MESSAGE_INTIME = 'RECEIVE_MESSAGE_INTIME';
+const READ_SPECIAL_MESSAGE = 'READ_SPECIAL_MESSAGE';
 
 function send_message(sendMessage) {
     return {
@@ -23,6 +25,19 @@ function get_history_message(count, data) {
     return {
         type: GET_HISTORY_MESSAGE,
         payload: {count, data}
+    }
+}
+
+export function receive_message_intime(data) {
+    return {
+        type:RECEIVE_MESSAGE_INTIME,
+        payload:data
+    }
+}
+
+export function read_special_message() {
+    return{
+        type:READ_SPECIAL_MESSAGE
     }
 }
 

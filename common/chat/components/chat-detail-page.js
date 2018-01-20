@@ -11,6 +11,7 @@ import KeyboardSpacer from 'react-native-keyboard-spacer';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {connect} from 'react-redux';
 import MessageItem from "./message-item";
+import {read_special_message} from '../actions';
 import {getMyHistoryMessage, sendMyMessage} from "../../utils/rest";
 import moment from "moment/moment";
 
@@ -35,6 +36,7 @@ class ChatPage extends React.Component {
             messages: [],
             count: 0
         };
+        this.loadingMore = false;
         this.sendMessage = this.sendMessage.bind(this);
         this.refresh = this.refresh.bind(this);
         this.focusInput = this.focusInput.bind(this);
@@ -45,8 +47,36 @@ class ChatPage extends React.Component {
         this.props.navigation.setParams({receiver: this.chatUser})
     }
 
+    componentWillReceiveProps(nextProps){
+        if(nextProps.messages&&nextProps.messages.sender===this.chatUser._id){
+            this.loadingMore = false;
+            let newMessage = nextProps.messages;
+            const created_at = nextProps.messages.created_at;
+            const messages = this.state.messages;
+            const diff = moment(created_at).diff(moment(messages[messages.length - 1].created_at), 'minutes');
+            if (diff >= 5 && diff < 60 * 24) {
+                newMessage = {...newMessage, time: moment(created_at).format('a h:mm')};
+            } else if (diff >= 60 * 24) {
+                newMessage = {...newMessage, time: moment(created_at).format('lll')};
+            }
+            this.setState((prevState,props)=>({
+                count:prevState.count + 1,
+                messages: [...prevState.messages, newMessage]
+            }));
+            this.props.read_special_message();
+        }
+    }
+
+
     componentDidMount() {
-        this.refresh();
+        this.loadingMore = false;
+        this.loadMoreMessage();
+    }
+
+    componentDidUpdate(){
+        if(!this.loadingMore) {
+            this._flatList.scrollToEnd()
+        }
     }
 
     /** 2018/1/17
@@ -72,8 +102,7 @@ class ChatPage extends React.Component {
         });
 
         sendMyMessage(content, sender, this.chatUser._id)
-            .then(() => {this._flatList.scrollToEnd();}).catch(err => {this._flatList.scrollToEnd();
-        })
+            .then(() => {}).catch(err => {})
     }
 
     /** 2018/1/18
@@ -81,6 +110,16 @@ class ChatPage extends React.Component {
      * function: 加载历史数据
      */
     refresh() {
+        this.loadingMore = true;
+       this.loadMoreMessage();
+    }
+
+    focusInput(){
+        this.loadingMore = false;
+        this._flatList.scrollToEnd();
+    }
+
+    loadMoreMessage(){
         const sender = this.chatUser._id;
         const receiver = this.props.user._id;
         const count = this.state.count;
@@ -99,10 +138,6 @@ class ChatPage extends React.Component {
                 });
             })
         }
-    }
-
-    focusInput(){
-        this._flatList.scrollToEnd();
     }
 
     render() {
@@ -132,11 +167,17 @@ class ChatPage extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        user: state.user
+        user: state.user,
+        messages:state.messages
+    }
+};
+const mapStateFromProps = dispatch=>{
+    return{
+        read_special_message:()=>dispatch(read_special_message())
     }
 };
 
-export default connect(mapStateToProps, null)(ChatPage)
+export default connect(mapStateToProps, mapStateFromProps)(ChatPage)
 
 const styles = StyleSheet.create({
     container: {

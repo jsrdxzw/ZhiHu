@@ -3,8 +3,9 @@ import {FlatList, Platform, Text, View, ActivityIndicator,StyleSheet} from 'reac
 import {setUserLocation, getNearUsers} from '../../utils/rest';
 import {Toast} from 'antd-mobile';
 import ChatItem from "./chat-item";
+import {connect} from 'react-redux';
 
-export default class ChatList extends React.Component {
+class ChatList extends React.Component {
     constructor(props) {
         super(props);
         this.firstLoad = true;
@@ -113,6 +114,14 @@ export default class ChatList extends React.Component {
         Toast.hide()
     }
 }
+
+const mapStateToProps = state=>{
+    return{
+        messages:state.messages
+    }
+};
+
+export default connect(mapStateToProps,null)(ChatList)
 
 const styles = StyleSheet.create({
     listHeader:{

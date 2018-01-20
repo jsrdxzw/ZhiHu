@@ -5,6 +5,7 @@ import ItemCard from "../components/item-card";
 import LoginViewModal from "../components/loginViewModal";
 import InfoCard from "../components/info-avatar-card";
 import LogoutItem from "../components/logOutItem";
+import {disConnectSocket} from '../../utils/websocket';
 
 const width = Dimensions.get('window').width;
 
@@ -98,6 +99,11 @@ export default class UserCenter extends React.Component {
             </ScrollView>
         )
     }
+
+    componentWillUnmount(){
+        disConnectSocket(this.props.user._id);
+    }
+
 }
 
 const styles = StyleSheet.create({

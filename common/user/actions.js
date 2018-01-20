@@ -115,7 +115,9 @@ export const login = (studentID, password) => {
 };
 
 export const logout = () => {
-    return dispatch => {
+    return (dispatch,getState) => {
+        const id = getState().user._id;
+        disConnectSocket(id);
         AsyncStorage.removeItem('user').then(() => {
             dispatch(logoutUser())
         }).catch((err) => {
