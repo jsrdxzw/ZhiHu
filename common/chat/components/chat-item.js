@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, StyleSheet, Text, Image, TouchableOpacity} from 'react-native';
 import {withNavigation} from 'react-navigation';
+import {connect} from 'react-redux';
 
 class ChatItem extends React.PureComponent {
 
@@ -11,6 +12,10 @@ class ChatItem extends React.PureComponent {
 
     gotoDetailChatView(){
         this.props.navigation.navigate('ChatDetailPage',{receiver:this.props.user})
+    }
+
+    componentWillReceiveProps(nextProps){
+
     }
 
     render() {
@@ -28,6 +33,9 @@ class ChatItem extends React.PureComponent {
                                   numberOfLines={2}>{user.speciality && user.speciality.join(',')}</Text>
                         </View>
                     </View>
+                    <View style={styles.circleContainer}>
+                        <Text style={styles.circleTextStyle}>1</Text>
+                    </View>
                     <Text style={styles.rightTextStyle}>{user.distance}</Text>
                 </View>
             </TouchableOpacity>
@@ -35,7 +43,12 @@ class ChatItem extends React.PureComponent {
     }
 }
 
-export default withNavigation(ChatItem)
+const mapStateToProps = state=>{
+   return {
+       messages:state.messages
+   }
+};
+export default connect(mapStateToProps,null)(withNavigation(ChatItem))
 
 const styles = StyleSheet.create({
     container: {
@@ -64,6 +77,19 @@ const styles = StyleSheet.create({
     rightTextStyle: {
         fontSize: 14,
         color: '#8c8c8c',
+    },
+    circleContainer:{
+        backgroundColor:'#f5222d',
+        minWidth:16,
+        padding:2,
+        alignItems:'center',
+        borderRadius:4,
+        marginRight:10
+    },
+    circleTextStyle:{
+        color:'#fff',
+        fontSize:12,
+        fontWeight:'800'
     },
     specialistsStyle: {
         marginTop: 5,

@@ -6,6 +6,8 @@ const GET_HISTORY_MESSAGE = 'GET_HISTORY_MESSAGE';
 const LOADING_MORE = 'LOADING_MORE';
 const RECEIVE_MESSAGE_INTIME = 'RECEIVE_MESSAGE_INTIME';
 const READ_SPECIAL_MESSAGE = 'READ_SPECIAL_MESSAGE';
+const SET_CHATTER = 'SET_CHATTER';
+const CLEAR_CHATTER = 'CLEAR_CHATTER';
 
 function send_message(sendMessage) {
     return {
@@ -38,6 +40,19 @@ export function receive_message_intime(data) {
 export function read_special_message() {
     return{
         type:READ_SPECIAL_MESSAGE
+    }
+}
+
+export function set_current_chater(chatter) {
+    return{
+        type:SET_CHATTER,
+        payload:chatter
+    }
+}
+
+export function clear_chatter() {
+    return{
+        type:CLEAR_CHATTER
     }
 }
 

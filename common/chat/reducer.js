@@ -4,14 +4,21 @@
 //     messages:[]
 // };
 
-const initState = null;
+const initState = {
+    messages:null,
+    currentChatter:null
+};
 
 const reducer = (state=initState,action)=>{
     switch (action.type){
         case 'RECEIVE_MESSAGE_INTIME':
-            return action.payload;
+            return {...state,messages:action.payload};
         case 'READ_SPECIAL_MESSAGE':
-            return null;
+            return {...state,messages:null};
+        case 'SET_CHATTER':
+            return {...state,currentChatter:action.payload};
+        case 'CLEAR_CHATTER':
+            return {...state,currentChatter:null};
         // case 'SEND_MESSAGE':
         //     return {...state,messages:[...state.messages,action.payload],count:state.count+1};
         // case 'LOADING_MORE':

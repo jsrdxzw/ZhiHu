@@ -11,7 +11,7 @@ import KeyboardSpacer from 'react-native-keyboard-spacer';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {connect} from 'react-redux';
 import MessageItem from "./message-item";
-import {read_special_message} from '../actions';
+import {read_special_message,set_current_chater,clear_chatter} from '../actions';
 import {getMyHistoryMessage, sendMyMessage} from "../../utils/rest";
 import moment from "moment/moment";
 
@@ -70,6 +70,7 @@ class ChatPage extends React.Component {
 
     componentDidMount() {
         this.loadingMore = false;
+        this.props.set_current_chater(this.chatUser._id);
         this.loadMoreMessage();
     }
 
@@ -163,17 +164,23 @@ class ChatPage extends React.Component {
         );
     }
 
+    componentWillUnmount(){
+          this.props.clear_chatter();
+    }
+
 }
 
 const mapStateToProps = state => {
     return {
         user: state.user,
-        messages:state.messages
+        messages:state.messages.messages
     }
 };
 const mapStateFromProps = dispatch=>{
     return{
-        read_special_message:()=>dispatch(read_special_message())
+        read_special_message:()=>dispatch(read_special_message()),
+        set_current_chater:(chatter_id)=>dispatch(set_current_chater(chatter_id)),
+        clear_chatter:()=>dispatch(clear_chatter())
     }
 };
 
