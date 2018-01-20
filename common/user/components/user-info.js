@@ -12,7 +12,7 @@ import {connect} from 'react-redux';
 class UserInfo extends React.PureComponent {
 
     static navigationOptions = {
-        title: '个人信息'
+        title: '個人情報'
     };
 
     render() {
@@ -21,17 +21,17 @@ class UserInfo extends React.PureComponent {
             <ScrollView style={styles.container}>
                 <View>
                     <View style={{marginTop: 20}}>
-                        <ItemCard title={'头像'} to={'avatar'} rightRender={'avatar'}
+                        <ItemCard title={'アイコン'} to={'avatar'} rightRender={'avatar'}
                                   navigation={this.props.navigation}/>
-                        <ItemCard title={'名字'} to={'name'} rightRender={name} navigation={this.props.navigation}/>
-                        <ItemCard title={'性别'} to={'gender'} rightRender={gender} navigation={this.props.navigation}/>
+                        <ItemCard title={'名前'} to={'name'} rightRender={name} navigation={this.props.navigation}/>
+                        <ItemCard title={'性別'} to={'gender'} rightRender={gender} navigation={this.props.navigation}/>
                     </View>
                     <View style={{marginTop: 10}}>
-                        <ItemCard title={'我的专长'} to={'speciality'} navigation={this.props.navigation}/>
+                        <ItemCard title={'個人特長'} to={'speciality'} navigation={this.props.navigation}/>
                     </View>
 
                     <View style={{marginTop: 10}}>
-                        <ItemCard title={'个人简介'} to={'description'} navigation={this.props.navigation} rightRender={description}/>
+                        <ItemCard title={'個人紹介'} to={'description'} navigation={this.props.navigation} rightRender={description}/>
                     </View>
                 </View>
             </ScrollView>

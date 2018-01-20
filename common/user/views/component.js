@@ -14,8 +14,8 @@ export default class UserCenter extends React.Component {
     static navigationOptions = {
         headerTintColor: 'rgba(0, 0, 0, 0.85098)',
         headerStyle: {backgroundColor: 'white'},
-        title: '设定',
-        tabBarLabel: '设定',
+        title: '設定',
+        tabBarLabel: '設定',
         tabBarIcon: ({tintColor}) => (
             <Icon name={'ios-settings'} size={24} style={{color: tintColor}}/>
         )
@@ -70,12 +70,12 @@ export default class UserCenter extends React.Component {
                         <InfoCard name={user.name} studentID={user.studentID} gender={user.gender} avatar={user.avatar}
                                   navigation={this.props.navigation}/>
                         <View style={{marginTop: 20}}>
-                            <ItemCard title={'我的提问'} to={'myQuestionList'} navigation={this.props.navigation} type={'question'}/>
-                            <ItemCard title={'我的关注'} to={'myQuestionList'} navigation={this.props.navigation} type={'concern'}/>
-                            <ItemCard title={'我的回答'} to={'myQuestionList'} navigation={this.props.navigation} type={'answer'}/>
+                            <ItemCard title={'私の問題'} to={'myQuestionList'} navigation={this.props.navigation} type={'question'}/>
+                            <ItemCard title={'私の関心'} to={'myQuestionList'} navigation={this.props.navigation} type={'concern'}/>
+                            <ItemCard title={'私の回答'} to={'myQuestionList'} navigation={this.props.navigation} type={'answer'}/>
                         </View>
                         <View style={{marginTop: 20}}>
-                            <ItemCard title={'我的收藏'} to={'collectionList'} navigation={this.props.navigation}/>
+                            <ItemCard title={'私のコレクション'} to={'collectionList'} navigation={this.props.navigation}/>
                         </View>
 
                         <View style={{marginTop: 20}}>
@@ -89,9 +89,9 @@ export default class UserCenter extends React.Component {
                                         startLogin={this.startLogin}
                         />
                         <View style={styles.loginCard}>
-                            <Text style={{fontSize: 16}}>登录，体验更多功能</Text>
+                            <Text style={{fontSize: 16}}>ログイン，機能をもっと体験しよう</Text>
                             <TouchableOpacity onPress={this.switchModal}>
-                                <Text style={{color: 'gray'}}>开始登录</Text>
+                                <Text style={{color: 'gray'}}>ログインスタート</Text>
                             </TouchableOpacity>
                         </View>
                     </View>

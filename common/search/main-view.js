@@ -64,7 +64,7 @@ export default class SearchViewModal extends React.Component {
                     <View style={styles.headerStyle}>
                         <TextInput
                             style={styles.searchInputStyle}
-                            placeholder={'搜索感兴趣的内容'}
+                            placeholder={'関心する内容を検索しょう'}
                             onSubmitEditing={this.startSearch}
                             returnKeyType={'search'}
                             onChangeText={text => this.changeText(text)}
@@ -73,7 +73,7 @@ export default class SearchViewModal extends React.Component {
                             value={this.state.searchContent}
                         />
                         <TouchableOpacity onPress={this.switchModal}>
-                            <Text style={styles.headerTextStyle}>取消</Text>
+                            <Text style={styles.headerTextStyle}>キャンセル</Text>
                         </TouchableOpacity>
                     </View>
                     {this.state.historyView ?

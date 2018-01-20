@@ -10,8 +10,8 @@ export default class Chat extends React.Component{
         return {
             headerTintColor: 'rgba(0, 0, 0, 0.85098)',
             headerStyle: {backgroundColor: 'white'},
-            title: '消息',
-            tabBarLabel: '消息',
+            title: 'メッセージ',
+            tabBarLabel: 'メッセージ',
             tabBarIcon: ({tintColor}) => (
                 <Icon name={'md-chatboxes'} size={24} style={{color: tintColor}}/>
             )
@@ -25,7 +25,7 @@ export default class Chat extends React.Component{
                 {user.isLogin?
                         <ChatList/>
                     :
-                    <Text style={styles.loginTip}>请先登录</Text>
+                    <Text style={styles.loginTip}>ログインしてください</Text>
                 }
             </View>
         )

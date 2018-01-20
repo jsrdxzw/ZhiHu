@@ -6,13 +6,13 @@ import InviteNotification from "../components/invite-notification";
 
 const tabs = [
     {
-        title:'邀请'
+        title:'招待'
     },
     {
         title:'回答'
     },
     {
-        title:'评论'
+        title:'コメント'
     }
 ];
 
@@ -22,8 +22,8 @@ export default class Notification extends React.Component {
         return {
             headerTintColor: 'rgba(0, 0, 0, 0.85098)',
             headerStyle: {backgroundColor: 'white'},
-            title: '通知',
-            tabBarLabel: '通知',
+            title: '知らせ',
+            tabBarLabel: '知らせ',
             tabBarIcon: ({tintColor}) => (
                 <Icon name={'ios-notifications'} size={24} style={{color: tintColor}}/>
             )
@@ -35,7 +35,7 @@ export default class Notification extends React.Component {
         return (
             <View style={styles.container}>
                 <View style={styles.headerStyle}>
-                    <Text>通知列表</Text>
+                    <Text>知らせリスト</Text>
                 </View>
                 {user.isLogin ?
                     <Tabs
@@ -52,7 +52,7 @@ export default class Notification extends React.Component {
                         <InviteNotification type={'comment'}/>
                     </Tabs>
                     :
-                    <Text style={styles.loginTip}>请先登录</Text>
+                    <Text style={styles.loginTip}>ログインしてください</Text>
                 }
             </View>
         )

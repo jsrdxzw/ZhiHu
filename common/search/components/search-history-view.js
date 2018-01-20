@@ -59,7 +59,7 @@ export default class SearchHistoryList extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <Text style={styles.historyTextStyle}>搜索历史</Text>
+                <Text style={styles.historyTextStyle}>検索歴史</Text>
                 <FlatList
                     onRefresh={this.refresh}
                     refreshing={this.state.loading}

@@ -11,8 +11,8 @@ import SearchViewModal from "../../search/main-view";
 
 const tabs = [
     { title:'最新' },
-    { title: '关注' },
-    { title: '热门' },
+    { title: '注目' },
+    { title: '人気' },
 ];
 
 
@@ -22,8 +22,8 @@ export default class HomePage extends React.Component {
         return {
             headerTintColor: 'rgba(0, 0, 0, 0.85098)',
             headerStyle: {backgroundColor: 'white'},
-            title: '首页',
-            tabBarLabel: '首页',
+            title: 'Home',
+            tabBarLabel: 'Home',
             tabBarIcon: ({tintColor}) => (
                 <Icon name={'ios-home'} size={24} style={{color: tintColor}}/>
             ),

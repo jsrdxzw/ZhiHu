@@ -26,7 +26,7 @@ class AnswerQuestionModal extends React.PureComponent{
                         </TouchableOpacity>
                         <Text style={{fontSize: 18}}>{question.title}</Text>
                         <TouchableOpacity disabled={!this.state.comment} onPress={this.submit}>
-                            <Text style={{color: this.state.comment ? '#1890ff' : 'rgba(0, 0, 0, 0.65098)'}}>发布</Text>
+                            <Text style={{color: this.state.comment ? '#1890ff' : 'rgba(0, 0, 0, 0.65098)'}}>提出</Text>
                         </TouchableOpacity>
                     </View>
                     <View>

@@ -25,9 +25,9 @@ export default class AnswerQuestionItem extends React.PureComponent {
                     <View>
                         <Text style={{marginVertical: 10}}>{comment.content}</Text>
                         <View style={{flexDirection:'row'}}>
-                            <Text style={styles.footerTextStyle}>{comment.agreecount} 赞同&nbsp;·&nbsp;</Text>
+                            <Text style={styles.footerTextStyle}>{comment.agreecount} 賛成&nbsp;·&nbsp;</Text>
                             <Text style={styles.footerTextStyle}>{comment.disagreecount} 反对&nbsp;·&nbsp;</Text>
-                            <Text style={styles.footerTextStyle}>{comment.subcommentcount} 评论&nbsp;·&nbsp;</Text>
+                            <Text style={styles.footerTextStyle}>{comment.subcommentcount} コメント&nbsp;·&nbsp;</Text>
                             <Text style={styles.footerTextStyle}>{comment.from_now}</Text>
                         </View>
                     </View>

@@ -9,7 +9,7 @@ export default class LogoutItem extends React.PureComponent {
     }
 
     showActionSheet() {
-        const BUTTONS = ['退出', '取消'];
+        const BUTTONS = ['ログアウト', 'キャンセル'];
         ActionSheet.showActionSheetWithOptions({
             options: BUTTONS,
             cancelButtonIndex: BUTTONS.length - 1,
@@ -25,7 +25,7 @@ export default class LogoutItem extends React.PureComponent {
         return (
             <TouchableOpacity onPress={this.showActionSheet}>
                 <View style={styles.container}>
-                    <Text>退出</Text>
+                    <Text>ログアウト</Text>
                 </View>
             </TouchableOpacity>
         )
