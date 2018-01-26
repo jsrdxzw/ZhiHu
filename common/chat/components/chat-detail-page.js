@@ -4,7 +4,8 @@ import {
     Text,
     View,
     FlatList,
-    TouchableOpacity
+    TouchableOpacity,
+    Platform
 } from 'react-native';
 import ChatFooter from "./chat-footer";
 import KeyboardSpacer from 'react-native-keyboard-spacer';
@@ -159,7 +160,7 @@ class ChatPage extends React.Component {
                         }
                     />
                 <ChatFooter sendMessage={this.sendMessage} focusInput={this.focusInput}/>
-                <KeyboardSpacer/>
+                {Platform.OS==='ios'?<KeyboardSpacer/>:null}
             </View>
         );
     }

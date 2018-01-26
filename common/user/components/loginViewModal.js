@@ -3,14 +3,20 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {Modal, StyleSheet, View, Text, TouchableOpacity, TextInput, Dimensions} from 'react-native';
 const width = Dimensions.get('window').width;
 
-export default class LoginViewModal extends React.Component {
+export default class LoginViewModal extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
             studentID:'',
             password:''
-        }
+        };
+
     }
+
+    switchRegisterModal(){
+
+    }
+
     render() {
         const {visible, switchModal, startLogin} = this.props;
         const canClick = !!(this.state.studentID && this.state.password);
@@ -26,13 +32,16 @@ export default class LoginViewModal extends React.Component {
                     <View style={styles.formContainer}>
                         <Text style={{fontSize: 22}}>用户登录</Text>
                         <View style={styles.inputContainer}>
-                            <TextInput style={styles.inputStyle} placeholder={'学号'} maxLength={16} autoCapitalize={'none'} autoFocus={true} onChangeText={text=>this.setState({studentID : text.trim()})}/>
-                            <TextInput style={styles.inputStyle1} placeholder={'密码'} maxLength={20} onChangeText={text=>this.setState({password : text.trim()})}
+                            <TextInput style={styles.inputStyle} underlineColorAndroid={"transparent"} placeholder={'邮箱'} maxLength={16} autoCapitalize={'none'} autoFocus={true} onChangeText={text=>this.setState({studentID : text.trim()})}/>
+                            <TextInput style={styles.inputStyle1} underlineColorAndroid={"transparent"} placeholder={'密码'} maxLength={20} onChangeText={text=>this.setState({password : text.trim()})}
                                        secureTextEntry={true}/>
                             <TouchableOpacity style={[styles.btnStyle,{backgroundColor:color}]} disabled={!canClick} onPress={()=>startLogin(this.state.studentID,this.state.password)}>
                                 <Text style={{color:'#fff',fontSize:18}}>登录</Text>
                             </TouchableOpacity>
                         </View>
+                        <TouchableOpacity style={styles.registerContainer} onPress={this.switchRegisterModal}>
+                            <Text>还没有账号？注册一个</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </Modal>
@@ -43,7 +52,7 @@ export default class LoginViewModal extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f0f5ff'
+        backgroundColor: '#fff'
     },
     headerContainer: {
         marginTop: 40,
@@ -73,6 +82,9 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         paddingVertical:10,
         borderRadius:4
+    },
+    registerContainer:{
+        marginTop:25,
     }
 });
 

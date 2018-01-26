@@ -9,6 +9,7 @@ import {
     Platform,
     ActivityIndicator
 } from 'react-native';
+import {Toast} from 'antd-mobile';
 import Icon from 'react-native-vector-icons/Ionicons';
 import AnswerQuestionModal from '../common-component/answerQuestion';
 import fetchUrl from '../utils/fetch';
@@ -62,8 +63,12 @@ class DetailQuestion extends React.PureComponent {
     }
 
     inviteAnswer(){
-        const {params} = this.props.navigation.state;
-        this.props.navigation.navigate('inviteAnswerPage',{question:params.question});
+        if(this.props.user.isLogin) {
+            const {params} = this.props.navigation.state;
+            this.props.navigation.navigate('inviteAnswerPage', {question: params.question});
+        } else {
+            Toast.info('先にログインしてください',1);
+        }
     }
 
     render() {
@@ -173,7 +178,11 @@ class DetailQuestion extends React.PureComponent {
      * function:用户添加回答
      */
     addAnswer() {
-        this.switchModal();
+        if(this.props.user.isLogin){
+            this.switchModal();
+        } else {
+            Toast.info('先にログインしてください',1)
+        }
     }
 
     refresh() {

@@ -1,7 +1,7 @@
 import io from 'socket.io-client';
 import {actions} from '../chat';
 import Store from '../Store';
-const baseUrl = 'http://10.249.41.12:3000/chat';
+const baseUrl = 'http://localhost:3333/chat';
 
 let socket = null;
 

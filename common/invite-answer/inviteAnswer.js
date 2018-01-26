@@ -40,6 +40,7 @@ class InviteAnswer extends React.Component {
                     <TextInput
                         style={styles.searchInputStyle}
                         placeholder={'搜索你想邀请的人'}
+                        underlineColorAndroid={"transparent"}
                         // onSubmitEditing={this.startSearch}
                         returnKeyType={'search'}
                         onChangeText={text => params.changeText(text)}

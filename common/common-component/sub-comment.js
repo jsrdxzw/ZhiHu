@@ -2,11 +2,13 @@ import React from 'react';
 import {View, StyleSheet, Text, Image, TouchableOpacity, ScrollView,AsyncStorage,Alert} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
+import {Toast} from 'antd-mobile';
 import {agreeDisagreeComment,checkZanStatus} from '../utils/rest';
 import {storeCollection} from '../utils/storage';
+import {connect} from 'react-redux';
 
 //props:comment
-export default class SubComment extends React.Component {
+class SubComment extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -50,9 +52,13 @@ export default class SubComment extends React.Component {
     }
 
     switchFooterView() {
-        this.setState({
-            showAgreeView: !this.state.showAgreeView
-        })
+        if(this.props.login) {
+            this.setState({
+                showAgreeView: !this.state.showAgreeView
+            })
+        } else {
+            Toast.info('先にログインしてください',1);
+        }
     }
 
     //赞同评论
@@ -84,12 +90,20 @@ export default class SubComment extends React.Component {
      * function:收藏用户评论,只需要保存到本地既可
      */
     collectComment() {
-        const {comment,title} = this.props.navigation.state.params;
-        storeCollection(comment,title);
+        if(this.props.login) {
+            const {comment, title} = this.props.navigation.state.params;
+            storeCollection(comment, title);
+        } else {
+            Toast.info('先にログインしてください',1);
+        }
     }
 
     gotoSubDetailPage(){
-        this.props.navigation.navigate('subDetailCommentPage',{comment:this.props.navigation.state.params.comment})
+        if(this.props.login) {
+            this.props.navigation.navigate('subDetailCommentPage', {comment: this.props.navigation.state.params.comment});
+        } else {
+            Toast.info('先にログインしてください',1);
+        }
     }
 
     render() {
@@ -201,6 +215,14 @@ export default class SubComment extends React.Component {
 
     }
 }
+
+const mapStateToProps = state=>{
+    return{
+        login:state.user.isLogin
+    }
+};
+
+export default connect(mapStateToProps,null)(SubComment);
 
 const styles = StyleSheet.create({
     container: {

@@ -36,6 +36,7 @@ class AskQuestionView extends React.Component {
                             style={styles.input}
                             multiline={true}
                             autoCapitalize={'none'}
+                            underlineColorAndroid={"transparent"}
                             placeholder={'输入问题并以问号结尾'}
                             autoCorrect={false}
                             autoFocus={true}
@@ -50,6 +51,7 @@ class AskQuestionView extends React.Component {
                             style={styles.input}
                             multiline={true}
                             autoCapitalize={'none'}
+                            underlineColorAndroid={"transparent"}
                             placeholder={'添加问题描述（选填）'}
                             autoCorrect={false}
                             clearButtonMode={'always'}

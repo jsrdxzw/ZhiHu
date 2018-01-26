@@ -45,6 +45,7 @@ class EditDescriptionPage extends React.PureComponent {
             <View style={styles.container}>
                 <TextInput style={styles.inputStyle} autoCorrect={false} autoFocus={true}
                            placeholder={'20字以内'}
+                           underlineColorAndroid={"transparent"}
                            maxLength={20}
                            defaultValue={this.props.user.description} clearButtonMode={'always'}
                            onChangeText={(description)=>{this.editDescription(description)}}

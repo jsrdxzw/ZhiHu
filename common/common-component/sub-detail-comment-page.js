@@ -36,7 +36,7 @@ export default class SubDetailCommentPage extends React.Component {
         this.loadMore = this.loadMore.bind(this);
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this.loadMore();
     }
 
@@ -45,7 +45,7 @@ export default class SubDetailCommentPage extends React.Component {
         const {comment} = this.props.navigation.state.params;
         const content = this.state.text;
         if (content) {
-            submitSubComment(content, comment._id,comment.authorId._id).then(data => {
+            submitSubComment(content, comment._id, comment.authorId._id).then(data => {
                 this.refresh()
             });
         }
@@ -59,15 +59,15 @@ export default class SubDetailCommentPage extends React.Component {
 
     refresh() {
         const {comment} = this.props.navigation.state.params;
-        refreshSubComments(comment._id).then(res=>{
-            const {data,count} = res;
+        refreshSubComments(comment._id).then(res => {
+            const {data, count} = res;
             this.setState({
                 subComments: data,
-                count:count?count:this.state.count,
+                count: count ? count : this.state.count,
                 loading: false,
-                text:''
+                text: ''
             })
-        },err=>{
+        }, err => {
             this.setState({
                 loading: false
             })
@@ -77,13 +77,13 @@ export default class SubDetailCommentPage extends React.Component {
     loadMore() {
         if (this.firstLoad) { //表示初次加载
             this.setState({
-                loadingMore:true
+                loadingMore: true
             });
             this.firstLoad = false;
             this.getSubComment();
         } else if (this.state.count > this.state.subComments.length && !this.isLoading) {
             this.setState({
-                loadingMore:true
+                loadingMore: true
             });
             this.isLoading = true;
             this.getSubComment();
@@ -94,14 +94,14 @@ export default class SubDetailCommentPage extends React.Component {
         const {comment} = this.props.navigation.state.params;
         getSubComments(comment._id, this.state.subComments.length)
             .then(res => {
-                const {count,data} = res;
+                const {count, data} = res;
                 this.setState({
                     subComments: [...this.state.subComments, ...data],
                     count: count,
                     loadingMore: false
                 });
                 this.isLoading = false;
-            },err=>{
+            }, err => {
                 this.setState({
                     loadingMore: false
                 });
@@ -112,33 +112,34 @@ export default class SubDetailCommentPage extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                    <FlatList
-                        onRefresh={this.refresh}
-                        refreshing={this.state.loading}
-                        onEndReached={this.loadMore}
-                        onEndReachedThreshold={Platform.OS === 'ios' ? -0.1 : 0}
-                        data={this.state.subComments}
-                        keyExtractor={(item) => item._id}
-                        renderItem={({item}) => <SubCommentItem subComment={item}/>}
-                        ListEmptyComponent={
-                            <View style={{
-                                flex: 1,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                padding: 5
-                            }}><Text>还没有任何评论</Text></View>
-                        }
-                        ListHeaderComponent={
-                            <View style={styles.headerContainer}><Text style={styles.headerTextStyle}>{this.state.count}条评论</Text></View>
-                        }
-                        ListFooterComponent={this.state.loadingMore ? (
-                            <View style={styles.footLoadingStyle}>
-                                <ActivityIndicator animating={true}/>
-                            </View>
-                        ) : null}
-                    />
+                <FlatList
+                    onRefresh={this.refresh}
+                    refreshing={this.state.loading}
+                    onEndReached={this.loadMore}
+                    onEndReachedThreshold={Platform.OS === 'ios' ? -0.1 : 0}
+                    data={this.state.subComments}
+                    keyExtractor={(item) => item._id}
+                    renderItem={({item}) => <SubCommentItem subComment={item}/>}
+                    ListEmptyComponent={
+                        <View style={{
+                            flex: 1,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            padding: 5
+                        }}><Text>还没有任何评论</Text></View>
+                    }
+                    ListHeaderComponent={
+                        <View style={styles.headerContainer}><Text
+                            style={styles.headerTextStyle}>{this.state.count}条评论</Text></View>
+                    }
+                    ListFooterComponent={this.state.loadingMore ? (
+                        <View style={styles.footLoadingStyle}>
+                            <ActivityIndicator animating={true}/>
+                        </View>
+                    ) : null}
+                />
                 {this.footerInputView()}
-                <KeyboardSpacer/>
+                {Platform.OS === 'ios' ? <KeyboardSpacer/> : null}
             </View>
         )
     }
@@ -173,13 +174,13 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff'
     },
-    headerContainer:{
-        backgroundColor:'#e8e8e8',
-        padding:5
+    headerContainer: {
+        backgroundColor: '#e8e8e8',
+        padding: 5
     },
-    headerTextStyle:{
-        color:'rgba(0, 0, 0, 0.45098)',
-        fontSize:12
+    headerTextStyle: {
+        color: 'rgba(0, 0, 0, 0.45098)',
+        fontSize: 12
     },
     footerContainer: {
         padding: 5,

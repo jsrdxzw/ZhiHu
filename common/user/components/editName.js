@@ -45,6 +45,7 @@ class EditNamePage extends React.PureComponent {
             <View style={styles.container}>
                 <TextInput style={styles.inputStyle} autoCorrect={false} autoFocus={true}
                            placeholder={'匿名'}
+                           underlineColorAndroid={"transparent"}
                            defaultValue={this.props.user.name} clearButtonMode={'always'}
                            onChangeText={(name)=>{this.editName(name)}}
                 />

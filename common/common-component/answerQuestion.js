@@ -33,6 +33,7 @@ class AnswerQuestionModal extends React.PureComponent{
                         <TextInput
                             style={styles.input}
                             multiline={true}
+                            underlineColorAndroid={"transparent"}
                             autoCapitalize={'none'}
                             placeholder={'输入评论'}
                             autoCorrect={false}

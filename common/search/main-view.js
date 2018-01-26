@@ -66,6 +66,7 @@ export default class SearchViewModal extends React.Component {
                             style={styles.searchInputStyle}
                             placeholder={'関心する内容を検索しょう'}
                             onSubmitEditing={this.startSearch}
+                            underlineColorAndroid={"transparent"}
                             returnKeyType={'search'}
                             onChangeText={text => this.changeText(text)}
                             inlineImageLeft={'search_icon'}
