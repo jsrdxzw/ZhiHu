@@ -1,9 +1,9 @@
 import React from 'react';
-import {View, StyleSheet, Text, Image, TouchableOpacity, ScrollView,AsyncStorage,Alert} from 'react-native';
+import {View, StyleSheet, Text, Image, TouchableOpacity, ScrollView} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
 import {Toast} from 'antd-mobile';
-import {agreeDisagreeComment,checkZanStatus} from '../utils/rest';
+import {agreeDisagreeComment, cancelAgreeAndDisagree, checkZanStatus} from '../utils/rest';
 import {storeCollection} from '../utils/storage';
 import {connect} from 'react-redux';
 
@@ -13,7 +13,8 @@ class SubComment extends React.Component {
         super(props);
         this.state = {
             showAgreeView: false,
-            agreeStatus:null //表示赞同还是反对
+            agreeStatus: null, //表示赞同还是反对
+            clickDisabled: false
         };
         this.gotoNextPage = this.gotoNextPage.bind(this);
         this.switchFooterView = this.switchFooterView.bind(this);
@@ -26,14 +27,14 @@ class SubComment extends React.Component {
     componentDidMount() {
         const {params} = this.props.navigation.state;
         this.props.navigation.setParams({title: params.title});
-        checkZanStatus(params.comment._id,params.comment.authorId._id)
-            .then(res=>{
+        checkZanStatus(params.comment._id, params.comment.authorId._id)
+            .then(res => {
                 this.setState({
-                    agreeStatus:res
+                    agreeStatus: res
                 })
-            }).catch(err=>{
+            }).catch(err => {
             this.setState({
-                agreeStatus:'init' //表示既没有赞成也没有反对
+                agreeStatus: 'init' //表示既没有赞成也没有反对
             })
         })
     }
@@ -52,12 +53,12 @@ class SubComment extends React.Component {
     }
 
     switchFooterView() {
-        if(this.props.login) {
-            this.setState((prevState,props)=>({
+        if (this.props.login) {
+            this.setState((prevState, props) => ({
                 showAgreeView: !prevState.showAgreeView
             }))
         } else {
-            Toast.info('先にログインしてください',1);
+            Toast.info('先にログインしてください', 1);
         }
     }
 
@@ -68,7 +69,7 @@ class SubComment extends React.Component {
             .then(() => {
                 this.switchFooterView();
                 this.setState({
-                    agreeStatus:1
+                    agreeStatus: 1
                 })
             }, err => this.switchFooterView())
     }
@@ -80,7 +81,7 @@ class SubComment extends React.Component {
             .then(() => {
                 this.switchFooterView();
                 this.setState({
-                    agreeStatus:0
+                    agreeStatus: 0
                 })
             }, err => this.switchFooterView())
     }
@@ -90,28 +91,48 @@ class SubComment extends React.Component {
      * function:收藏用户评论,只需要保存到本地既可
      */
     collectComment() {
-        if(this.props.login) {
+        if (this.props.login) {
             const {comment, title} = this.props.navigation.state.params;
             storeCollection(comment, title);
         } else {
-            Toast.info('先にログインしてください',1);
+            Toast.info('先にログインしてください', 1);
         }
     }
 
-    gotoSubDetailPage(){
-        if(this.props.login) {
+    gotoSubDetailPage() {
+        if (this.props.login) {
             this.props.navigation.navigate('subDetailCommentPage', {comment: this.props.navigation.state.params.comment});
         } else {
-            Toast.info('先にログインしてください',1);
+            Toast.info('先にログインしてください', 1);
         }
     }
+
+    /** 2018/1/27
+     * author: XU ZHI WEI
+     * function:取消赞同
+     */
+    cancelAgree(status) {
+        this.setState({
+            clickDisabled: true
+        });
+        const {comment} = this.props.navigation.state.params;
+        cancelAgreeAndDisagree(comment._id, comment.authorId._id, status)
+            .then((msg) => {
+                this.setState({
+                    agreeStatus: 'init',
+                    clickDisabled: false
+                });
+                Toast.info(msg, 1);
+            }, err => Toast.info(err, 1))
+    }
+
 
     render() {
         const {comment} = this.props.navigation.state.params;
 
         return (
             <View style={styles.container}>
-                <ScrollView style={{flex: 1}}>
+                <ScrollView>
                     <View style={styles.userInfoStyle}>
                         <TouchableOpacity activeOpacity={1} onPress={this.gotoNextPage}>
                             <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -143,7 +164,7 @@ class SubComment extends React.Component {
                 {this.state.showAgreeView ? this.showAgreeView() :
                     <View style={styles.footerContainer}>
 
-                        <TouchableOpacity onPress={this.switchFooterView} disabled={this.state.agreeStatus!=='init'}>
+                        <TouchableOpacity onPress={this.switchFooterView} disabled={this.state.agreeStatus !== 'init'}>
                             {this.showAgreeButton()}
                         </TouchableOpacity>
                         <TouchableOpacity onPress={this.collectComment}>
@@ -185,25 +206,29 @@ class SubComment extends React.Component {
         )
     }
 
-    showAgreeButton(){
+    showAgreeButton() {
         status = this.state.agreeStatus;
-        switch (status){
+        switch (status) {
             case 0:
-                return(
-                    <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                        <Icon name={'md-thumbs-down'} color={'#f759ab'} size={16}/>
-                        <Text style={{color: '#f759ab', fontSize: 12}}>已反对</Text>
-                    </View>
+                return (
+                    <TouchableOpacity onPress={()=>this.cancelAgree(0)} disabled={this.state.clickDisabled}>
+                        <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                            <Icon name={'md-thumbs-down'} color={'#f759ab'} size={16}/>
+                            <Text style={{color: '#f759ab', fontSize: 12}}>已反对</Text>
+                        </View>
+                    </TouchableOpacity>
                 );
             case 1:
-                return(
-                    <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                        <Icon name={'md-thumbs-up'} color={'#40A9FF'} size={16}/>
-                        <Text style={{color: '#40A9FF', fontSize: 12}}>已赞同</Text>
-                    </View>
+                return (
+                    <TouchableOpacity onPress={()=>this.cancelAgree(1)} disabled={this.state.clickDisabled}>
+                        <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                            <Icon name={'md-thumbs-up'} color={'#40A9FF'} size={16}/>
+                            <Text style={{color: '#40A9FF', fontSize: 12}}>已赞同</Text>
+                        </View>
+                    </TouchableOpacity>
                 );
             case 'init':
-                return(
+                return (
                     <View style={{justifyContent: 'center', alignItems: 'center'}}>
                         <Icon name={'ios-heart'} color={'rgba(0, 0, 0, 0.65098)'} size={16}/>
                         <Text style={{color: 'rgba(0, 0, 0, 0.65098)', fontSize: 12}}>赞同</Text>
@@ -216,13 +241,13 @@ class SubComment extends React.Component {
     }
 }
 
-const mapStateToProps = state=>{
-    return{
-        login:state.user.isLogin
+const mapStateToProps = state => {
+    return {
+        login: state.user.isLogin
     }
 };
 
-export default connect(mapStateToProps,null)(SubComment);
+export default connect(mapStateToProps, null)(SubComment);
 
 const styles = StyleSheet.create({
     container: {

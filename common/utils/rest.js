@@ -604,5 +604,18 @@ export const registerUser = (username, password, email, avatar) => {
     })
 };
 
+export const cancelAgreeAndDisagree = (comment_id,to_id,status)=>{
+    const from_id = Store.getState().user._id;
+    return fetchUrl('/api/comment/cancelAgreeComment', 'post', {comment_id, to_id, status, from_id})
+        .then(res => {
+            const {err,msg} = res;
+            if (!err) {
+                return Promise.resolve(msg)
+            } else {
+                return Promise.reject('err');
+            }
+        })
+};
+
 
 
