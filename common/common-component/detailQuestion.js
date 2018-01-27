@@ -7,7 +7,8 @@ import {
     Dimensions,
     FlatList,
     Platform,
-    ActivityIndicator
+    ActivityIndicator,
+    Alert
 } from 'react-native';
 import {Toast} from 'antd-mobile';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -63,12 +64,16 @@ class DetailQuestion extends React.PureComponent {
     }
 
     inviteAnswer(){
-        if(this.props.user.isLogin) {
-            const {params} = this.props.navigation.state;
-            this.props.navigation.navigate('inviteAnswerPage', {question: params.question});
-        } else {
-            Toast.info('先にログインしてください',1);
+        const {params} = this.props.navigation.state;
+        if(!params.question.authorID.email){
+               Alert.alert('提示','匿名问题不能邀请别人回答');
+               return;
         }
+        if(!this.props.user.isLogin) {
+            Toast.info('先にログインしてください',1);
+            return;
+        }
+        this.props.navigation.navigate('inviteAnswerPage', {question: params.question});
     }
 
     render() {
@@ -120,6 +125,7 @@ class DetailQuestion extends React.PureComponent {
                             fontSize: 12,
                             color: 'rgba(0, 0, 0, 0.65098)'
                         }}>{params.question.concerncount || 0}人关注</Text>
+
                         {(this.props.user._id === params.question.authorID._id || this.state.concern === null) ?
                             null
                             :
@@ -187,7 +193,7 @@ class DetailQuestion extends React.PureComponent {
 
     refresh() {
         const {params} = this.props.navigation.state;
-        fetchUrl(`/api/comment/refreshQuestionComment?questionId=${params.question._id}&count=${this.state.count}`, 'get')
+        fetchUrl(`/api/comment/refreshQuestionComment?questionId=${params.question._id}&skipCount=0`, 'get')
             .then(res => {
                 const {err, data, count} = res;
                 const newData = data.map(comment => (
@@ -195,7 +201,7 @@ class DetailQuestion extends React.PureComponent {
                 ));
                 if (!err) {
                     this.setState({
-                        comments: [...newData, ...this.state.comments],
+                        comments: newData,
                         count: count ? count : this.state.count,
                         loading: false
                     })
@@ -269,7 +275,7 @@ class DetailQuestion extends React.PureComponent {
             comments: [{
                 ...comment,
                 from_now: moment(comment.created_at).fromNow(),
-                authorId: this.props.user
+                authorId: comment.noName?this.props.user._id:this.props.user
             }, ...this.state.comments],
             count: this.state.count + 1
         })

@@ -53,9 +53,9 @@ class SubComment extends React.Component {
 
     switchFooterView() {
         if(this.props.login) {
-            this.setState({
-                showAgreeView: !this.state.showAgreeView
-            })
+            this.setState((prevState,props)=>({
+                showAgreeView: !prevState.showAgreeView
+            }))
         } else {
             Toast.info('先にログインしてください',1);
         }

@@ -12,19 +12,10 @@ export default class AnswerQuestionItem extends React.PureComponent {
         return (
             <TouchableOpacity onPress={this.gotoSubCommentPage} activeOpacity={0.8}>
                 <View style={styles.container}>
-                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                        <Image style={styles.avatarStyle}
-                               source={{uri: `data:image/png;base64,${comment.authorId.avatar}`}}
-                        />
-                        <Text style={{
-                            marginLeft: 10,
-                            color: 'rgba(0, 0, 0, 0.85098)',
-                            fontSize: 12
-                        }}>{comment.authorId.name}</Text>
-                    </View>
+                    {this.getAnswerInfoView(comment)}
                     <View>
                         <Text style={{marginVertical: 10}} numberOfLines={3}>{comment.content}</Text>
-                        <View style={{flexDirection:'row'}}>
+                        <View style={{flexDirection: 'row'}}>
                             <Text style={styles.footerTextStyle}>{comment.agreecount} 賛成&nbsp;·&nbsp;</Text>
                             <Text style={styles.footerTextStyle}>{comment.disagreecount} 反对&nbsp;·&nbsp;</Text>
                             <Text style={styles.footerTextStyle}>{comment.subcommentcount} コメント&nbsp;·&nbsp;</Text>
@@ -34,6 +25,32 @@ export default class AnswerQuestionItem extends React.PureComponent {
                 </View>
             </TouchableOpacity>
         )
+    }
+
+    getAnswerInfoView(comment) {
+        if (comment.authorId.name) {
+            return (
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <Image style={styles.avatarStyle}
+                           source={{uri: `data:image/png;base64,${comment.authorId.avatar}`}}
+                    />
+                    <Text style={{
+                        marginLeft: 10,
+                        color: 'rgba(0, 0, 0, 0.85098)',
+                        fontSize: 12
+                    }}>{comment.authorId.name}</Text>
+                </View>
+            )
+        } else {
+            return (
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <Text style={{
+                        color: 'rgba(0, 0, 0, 0.85098)',
+                        fontSize: 12
+                    }}>匿名</Text>
+                </View>
+            )
+        }
     }
 
     gotoSubCommentPage() {
@@ -53,7 +70,7 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         resizeMode: Image.resizeMode.contain
     },
-    footerTextStyle:{
+    footerTextStyle: {
         fontSize: 12,
         color: 'rgba(0, 0, 0, 0.45098)'
     }

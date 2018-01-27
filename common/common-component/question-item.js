@@ -1,16 +1,16 @@
 import React from 'react';
 import {View, StyleSheet, Image, Text, TouchableOpacity} from 'react-native';
-import { withNavigation } from 'react-navigation';
+import {withNavigation} from 'react-navigation';
 
 class QuestionItem extends React.PureComponent {
-    constructor(props){
+    constructor(props) {
         super(props);
         this.gotoNextPage = this.gotoNextPage.bind(this);
     }
 
-    gotoNextPage(){
-        this.props.navigation.navigate('detailQuestionPage',{question:this.props.question});
-        if(this.props.dismissModal){
+    gotoNextPage() {
+        this.props.navigation.navigate('detailQuestionPage', {question: this.props.question});
+        if (this.props.dismissModal) {
             this.props.dismissModal();
         }
     }
@@ -20,31 +20,41 @@ class QuestionItem extends React.PureComponent {
         return (
             <TouchableOpacity activeOpacity={1} onPress={this.gotoNextPage}>
                 <View style={styles.container}>
-                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                        <Image style={styles.avatarStyle}
-                               source={{uri: `data:image/png;base64,${question.authorID&&question.authorID.avatar}`}}
-                        />
-                        <Text style={{color: 'rgba(0, 0, 0, 0.55098)', marginLeft: 10}}>{question.authorID&&question.authorID.name}</Text>
-                    </View>
+                    {this.questionHeader(question)}
                     <View style={styles.contentContainer}>
-                        <Text style={{fontSize: 18}}>{question.title}</Text>
-                        <Text style={{marginTop: 10, fontSize: 15, color: 'rgba(0, 0, 0, 0.75098)'}}
-                              numberOfLines={3}>{question.detail}</Text>
+                        <Text style={styles.titleTextStyle}>{question.title}</Text>
+                        <Text
+                            style={styles.contentTextStyle}
+                            numberOfLines={3}
+                        >{question.detail}</Text>
                     </View>
                     <View style={styles.footerContainer}>
-                        <Text style={{
-                            color: 'rgba(0, 0, 0, 0.55098)',
-                            fontSize: 12
-                        }}>{question.concerncount || 0}关注&nbsp;·&nbsp;</Text>
-                        <Text style={{
-                            color: 'rgba(0, 0, 0, 0.55098)',
-                            fontSize: 12
-                        }}>{question.commentcount || 0}评论&nbsp;·&nbsp;</Text>
-                        <Text style={{color: 'rgba(0, 0, 0, 0.55098)', fontSize: 12}}>{question.from_now}</Text>
+                        <Text style={styles.footerTextStyle}>{question.concerncount || 0}关注&nbsp;·&nbsp;</Text>
+                        <Text style={styles.footerTextStyle}>{question.commentcount || 0}评论&nbsp;·&nbsp;</Text>
+                        <Text style={styles.footerTextStyle}>{question.from_now}</Text>
                     </View>
                 </View>
             </TouchableOpacity>
         )
+    }
+
+    questionHeader(question) {
+        if (question.authorID.email) {
+            return (
+                <View style={styles.headerContainer}>
+                    <Image style={styles.avatarStyle}
+                           source={{uri: `data:image/png;base64,${question.authorID && question.authorID.avatar}`}}
+                    />
+                    <Text style={styles.nameTextStyle}>{question.authorID && question.authorID.name}</Text>
+                </View>
+            )
+        } else {
+            return (
+                <View style={styles.headerContainer}>
+                    <Text style={styles.noNameTextStyle}>匿名</Text>
+                </View>
+            )
+        }
     }
 }
 
@@ -63,9 +73,32 @@ const styles = StyleSheet.create({
     contentContainer: {
         marginVertical: 10
     },
+    titleTextStyle:{
+        fontSize: 18
+    },
+    contentTextStyle:{
+        marginTop: 10,
+        fontSize: 15,
+        color: 'rgba(0, 0, 0, 0.75098)'
+    },
     footerContainer: {
         flexDirection: 'row',
         marginTop: 10
+    },
+    headerContainer: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    footerTextStyle:{
+        color: 'rgba(0, 0, 0, 0.55098)',
+        fontSize: 12
+    },
+    nameTextStyle:{
+        color: 'rgba(0, 0, 0, 0.55098)',
+        marginLeft: 10
+    },
+    noNameTextStyle:{
+        color: 'rgba(0, 0, 0, 0.55098)'
     }
 });
 
