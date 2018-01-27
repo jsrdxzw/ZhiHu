@@ -13,7 +13,7 @@ export default class InfoCard extends React.PureComponent {
     }
 
     render() {
-        const {name, studentID, gender,avatar} = this.props;
+        const {name, email, gender,avatar} = this.props;
         return (
             <TouchableOpacity onPress={this.nextPage}>
                 <View style={styles.container}>
@@ -25,7 +25,7 @@ export default class InfoCard extends React.PureComponent {
                                 <Text>{name}</Text>
                                 {gender?<Icon name={gender==='男'?'md-male':'md-female'} size={14} style={{marginLeft:5,paddingTop:2,color:gender==='男'?'#1890ff':'#f759ab'}}/>:null}
                             </View>
-                            <Text style={{marginTop: 10}}>学籍番号: {studentID}</Text>
+                            <Text style={{marginTop: 10}}>メールアドレス: {email}</Text>
                         </View>
                     </View>
                     <Icon name={'ios-arrow-forward'} size={20} style={{color: '#aaa'}}/>

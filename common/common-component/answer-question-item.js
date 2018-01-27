@@ -23,7 +23,7 @@ export default class AnswerQuestionItem extends React.PureComponent {
                         }}>{comment.authorId.name}</Text>
                     </View>
                     <View>
-                        <Text style={{marginVertical: 10}}>{comment.content}</Text>
+                        <Text style={{marginVertical: 10}} numberOfLines={3}>{comment.content}</Text>
                         <View style={{flexDirection:'row'}}>
                             <Text style={styles.footerTextStyle}>{comment.agreecount} 賛成&nbsp;·&nbsp;</Text>
                             <Text style={styles.footerTextStyle}>{comment.disagreecount} 反对&nbsp;·&nbsp;</Text>

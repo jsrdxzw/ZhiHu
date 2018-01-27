@@ -10,6 +10,7 @@ const EDIT_USER_NAME = 'EDIT_USER_NAME';
 const EDIT_USER_GENDER = 'EDIT_USER_GENDER';
 const EDIT_USER_SPECIALIST = 'EDIT_USER_SPECIALIST';
 const EDIT_USER_DESCRIPTION = 'EDIT_USER_DESCRIPTION';
+const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
 
 /** 2017/12/23
  * author: XU ZHI WEI
@@ -96,9 +97,9 @@ export const getUserFromLocal = () => {
 };
 
 
-export const login = (studentID, password) => {
+export const login = (email, password) => {
     return dispatch => {
-        fetchUrl('/api/user/login', 'post', {studentID, password}).then(res => {
+        fetchUrl('/api/user/login', 'post', {email, password}).then(res => {
             const {err, data} = res;
             if (!err) {
                 AsyncStorage.setItem('user', JSON.stringify({...data, isLogin: true})).then(() => {
@@ -112,6 +113,18 @@ export const login = (studentID, password) => {
             alert('fetch error' + err)
         })
     }
+};
+
+
+/** 2018/1/27
+ * author: XU ZHI WEI
+ * function:注册成功
+ */
+export const register_success = (user)=>{
+   return {
+       type:REGISTER_SUCCESS,
+       payload:user
+   }
 };
 
 export const logout = () => {

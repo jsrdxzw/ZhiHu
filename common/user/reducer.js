@@ -4,12 +4,15 @@ const initState = {
     gender:'',
     avatar:'',
     description:'',
-    specialists:[]
+    specialists:[],
+    email:''
 };
 
 const reducer = (state=initState,action)=>{
     switch (action.type){
         case "LOGIN_SUCCESS":
+            return {...state,...action.payload,isLogin:true};
+        case 'REGISTER_SUCCESS':
             return {...state,...action.payload,isLogin:true};
         case "GET_USER_LOCAL":
             return {...state,...action.payload};

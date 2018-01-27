@@ -10,7 +10,7 @@ const mapStateToProps = state => {
 
 const mapStateFromProps = dispatch => {
     return {
-        login:(studentID,password)=>dispatch(login(studentID,password)),
+        login:(email,password)=>dispatch(login(email,password)),
         logout:()=>dispatch(logout()),
         getUserFromLocal:()=>dispatch(getUserFromLocal())
     }

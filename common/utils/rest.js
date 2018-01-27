@@ -1,16 +1,10 @@
 import fetchUrl from './fetch';
 import Store from '../Store';
 import moment from "moment/moment";
-import {sendMessage} from './websocket';
+import {connectSocket, sendMessage} from './websocket';
 import {getDistance} from './math';
+import {AsyncStorage} from "react-native";
 
-/** 2018/1/7
- * author: XU ZHI WEI
- * function:关注他人
- */
-export const followOther = otherId => {
-    const userId = Store.getState().user._id;
-};
 
 export const getLastestQuestion = (skipCount) => {
     return fetchUrl(`/api/question/lastQst?skipCount=${skipCount}`, 'get')
@@ -542,7 +536,7 @@ export const getNearUsers = (longitude, latitude, skipCount) => {
  * function:发送消息到数据库和socketio
  */
 export const sendMyMessage = (content, sender, receiver) => {
-    sendMessage(sender,receiver,content);
+    sendMessage(sender, receiver, content);
     return fetchUrl('/api/chat/sendMessage', 'post', {content, sender, receiver})
         .then(res => {
             const {err} = res;
@@ -563,29 +557,51 @@ export const sendMyMessage = (content, sender, receiver) => {
 export const getMyHistoryMessage = (sender, receiver, skipCount = 0) => {
     return fetchUrl(`/api/chat/historyMessage?sender=${sender}&receiver=${receiver}&skipCount=${skipCount}`, 'get')
         .then(res => {
-            const {err, count, data} = res;
-            if (!err) {
-                const newData = data;
-                for (let i = 1; i < data.length; i++) {
-                    const diff = moment(newData[i].created_at).diff(moment(newData[i-1].created_at), 'minutes');
-                    if (diff>=5  && diff<60 * 24) {
-                        newData[i] = {...newData[i], time: moment(newData[i].created_at).format('a h:mm')};
-                        continue;
+                const {err, count, data} = res;
+                if (!err) {
+                    const newData = data;
+                    for (let i = 1; i < data.length; i++) {
+                        const diff = moment(newData[i].created_at).diff(moment(newData[i - 1].created_at), 'minutes');
+                        if (diff >= 5 && diff < 60 * 24) {
+                            newData[i] = {...newData[i], time: moment(newData[i].created_at).format('a h:mm')};
+                            continue;
+                        }
+                        if (diff >= 60 * 24) {
+                            newData[i] = {...newData[i], time: moment(newData[i].created_at).format('lll')};
+                        }
                     }
-                    if (diff >= 60 * 24) {
-                        newData[i] = {...newData[i], time: moment(newData[i].created_at).format('lll')};
-                    }
+                    return Promise.resolve({count, data: newData})
                 }
-                return Promise.resolve({count, data: newData})
-            }
-            else
-                {
+                else {
                     return Promise.reject('err')
                 }
             }
         ).catch(err => {
             return Promise.reject('err')
         })
+};
+
+export const registerUser = (username, password, email, avatar) => {
+    return fetchUrl('/api/user/register', 'post', {
+        username, password, email, avatar
+    }).then(res => {
+        const {data, err} = res;
+        if (!err && data) {
+            return AsyncStorage.setItem('user', JSON.stringify({...data, isLogin: true})).then(() => {
+                connectSocket(data._id);
+                return Promise.resolve(data);
+            }).catch(() => {
+                return Promise.reject('err');
+            })
+        } else {
+            const {errmsg} = res;
+            if (errmsg) {
+                return Promise.reject(errmsg);
+            } else {
+                return Promise.reject('err');
+            }
+        }
+    })
 };
 
 

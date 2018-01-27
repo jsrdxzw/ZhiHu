@@ -47,9 +47,9 @@ export default class UserCenter extends React.Component {
      * author: XU ZHI WEI
      * function:用户开始登录
      */
-    startLogin(studentID, password) {
+    startLogin(email, password) {
         this.switchModal();
-        this.props.login(studentID, password)
+        this.props.login(email, password)
     }
 
 
@@ -67,7 +67,7 @@ export default class UserCenter extends React.Component {
             <ScrollView style={styles.container}>
                 {user.isLogin ? (
                     <View>
-                        <InfoCard name={user.name} studentID={user.studentID} gender={user.gender} avatar={user.avatar}
+                        <InfoCard name={user.name} gender={user.gender} avatar={user.avatar} email={user.email}
                                   navigation={this.props.navigation}/>
                         <View style={{marginTop: 20}}>
                             <ItemCard title={'私の問題'} to={'myQuestionList'} navigation={this.props.navigation} type={'question'}/>

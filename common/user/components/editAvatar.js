@@ -44,7 +44,6 @@ class EditAvatarPage extends React.PureComponent{
                      includeBase64:true,
                      compressImageMaxWidth:48,
                      compressImageMaxHeight:48,
-                     compressImageQuality:0.8,
                      mediaType:'phone'
                  }).then(image => {
                      this.setState({
