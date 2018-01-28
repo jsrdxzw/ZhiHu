@@ -139,7 +139,7 @@ class RegisterModal extends React.PureComponent {
     render() {
         const {visible, switchRegisterModal} = this.props;
         return (
-            <Modal visible={visible} animationType={'slide'}>
+            <Modal visible={visible} animationType={'slide'} onRequestClose={switchRegisterModal}>
                 <ImageBackground source={require('../../imgs/register.jpg')} style={styles.imageBackgroundStyle}
                                  resizeMode={'cover'}>
                     <ScrollView>

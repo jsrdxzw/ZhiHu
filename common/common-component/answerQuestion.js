@@ -1,10 +1,10 @@
 import React from 'react';
-import {View,StyleSheet,Alert,TouchableOpacity,TextInput,Text,Modal,Switch} from 'react-native';
+import {View, StyleSheet, Alert, TouchableOpacity, TextInput, Text, Modal, Switch, ScrollView} from 'react-native';
 import {connect} from 'react-redux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import fetchUrl from '../utils/fetch';
 
-class AnswerQuestionModal extends React.PureComponent{
+class AnswerQuestionModal extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
@@ -16,45 +16,48 @@ class AnswerQuestionModal extends React.PureComponent{
     }
 
     render() {
-        const {visible, switchModal,question} = this.props;
+        const {visible, switchModal, question} = this.props;
         return (
-            <Modal visible={visible} animationType={'slide'}>
-                <View style={styles.container}>
-                    <View style={styles.headerContainer}>
-                        <TouchableOpacity onPress={switchModal}>
-                            <Icon name={'ios-close-outline'} size={32} style={{color: 'rgba(0, 0, 0, 0.65098)'}}/>
-                        </TouchableOpacity>
-                        <Text style={{fontSize: 18}}>{question.title}</Text>
-                        <TouchableOpacity disabled={!this.state.comment} onPress={this.submit}>
-                            <Text style={{color: this.state.comment ? '#1890ff' : 'rgba(0, 0, 0, 0.65098)'}}>提出</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View>
-                        <TextInput
-                            style={styles.input}
-                            multiline={true}
-                            underlineColorAndroid={"transparent"}
-                            autoCapitalize={'none'}
-                            placeholder={'输入评论'}
-                            autoCorrect={false}
-                            autoFocus={true}
-                            clearButtonMode={'always'}
-                            onChangeText={comment => {
-                                this.editQuestion(comment)
-                            }}
-                            maxHeight={300}
-                        />
+            <Modal visible={visible} animationType={'slide'} onRequestClose={switchModal}>
+                <ScrollView>
+                    <View style={styles.container}>
+                        <View style={styles.headerContainer}>
+                            <TouchableOpacity onPress={switchModal}>
+                                <Icon name={'ios-close-outline'} size={32} style={{color: 'rgba(0, 0, 0, 0.65098)'}}/>
+                            </TouchableOpacity>
+                            <Text style={{fontSize: 18}}>{question.title}</Text>
+                            <TouchableOpacity disabled={!this.state.comment} onPress={this.submit}>
+                                <Text
+                                    style={{color: this.state.comment ? '#1890ff' : 'rgba(0, 0, 0, 0.65098)'}}>提出</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <View>
+                            <TextInput
+                                style={styles.input}
+                                multiline={true}
+                                underlineColorAndroid={"transparent"}
+                                autoCapitalize={'none'}
+                                placeholder={'输入评论'}
+                                autoCorrect={false}
+                                autoFocus={true}
+                                clearButtonMode={'always'}
+                                onChangeText={comment => {
+                                    this.editQuestion(comment)
+                                }}
+                                maxHeight={300}
+                            />
 
+                        </View>
+                        <View style={styles.footerContainer}>
+                            <Text>匿名回答</Text>
+                            <Switch
+                                onTintColor={'#1890ff'}
+                                value={this.state.switchValue}
+                                onValueChange={value => this.switchNoName(value)}
+                            />
+                        </View>
                     </View>
-                    <View style={styles.footerContainer}>
-                        <Text>匿名回答</Text>
-                        <Switch
-                            onTintColor={'#1890ff'}
-                            value={this.state.switchValue}
-                            onValueChange={value => this.switchNoName(value)}
-                        />
-                    </View>
-                </View>
+                </ScrollView>
             </Modal>
         )
     }
@@ -87,15 +90,21 @@ class AnswerQuestionModal extends React.PureComponent{
         }
     }
 
-    submit(){ //提交回答
+    submit() { //提交回答
         const comment = this.state.comment;
         const questionId = this.props.question._id;
-        this.postMyAnswer(this.props.userId,questionId,comment,this.state.switchValue);
+        this.postMyAnswer(this.props.userId, questionId, comment, this.state.switchValue);
         this.props.switchModal();
     }
 
-    postMyAnswer(authorId,questionId,content,noName){
-        fetchUrl('/api/comment/submitQuestionComment', 'post', {authorId,questionId,content,noName,to_user:this.props.question.authorID._id})
+    postMyAnswer(authorId, questionId, content, noName) {
+        fetchUrl('/api/comment/submitQuestionComment', 'post', {
+            authorId,
+            questionId,
+            content,
+            noName,
+            to_user: this.props.question.authorID._id
+        })
             .then(res => {
                 const {err, data} = res;
                 if (!err) { //提交问题成功
@@ -105,13 +114,11 @@ class AnswerQuestionModal extends React.PureComponent{
     }
 
 
-
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fafafa'
     },
     headerContainer: {
         marginTop: 20,
@@ -139,10 +146,10 @@ const styles = StyleSheet.create({
     }
 });
 
-const mapStateToProps = state=>{
-    return{
-        userId:state.user._id
+const mapStateToProps = state => {
+    return {
+        userId: state.user._id
     }
 };
 
-export default connect(mapStateToProps,null)(AnswerQuestionModal)
+export default connect(mapStateToProps, null)(AnswerQuestionModal)

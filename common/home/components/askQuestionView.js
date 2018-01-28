@@ -1,76 +1,134 @@
 import React from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {Modal, StyleSheet, View, Text, TouchableOpacity, TextInput, Switch, Alert} from 'react-native';
+import {Modal, StyleSheet, View, Text, TouchableOpacity, TextInput, Switch, Alert, ScrollView,Dimensions,Image} from 'react-native';
 import {connect} from 'react-redux';
 import {submitQuestion} from '../actions';
+import ImagePicker from "react-native-image-crop-picker";
+import {ActionSheet} from "antd-mobile/lib/index";
+
+const {width} = Dimensions.get('window');
 
 class AskQuestionView extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             questionTitle: '',
-            questionDetail:'',
-            switchValue: false
+            questionDetail: '',
+            switchValue: false,
+            picture:''
         };
         this.editQuestion = this.editQuestion.bind(this);
         this.editQuestionDetail = this.editQuestionDetail.bind(this);
         this.submit = this.submit.bind(this);
+        this.showActionSheet = this.showActionSheet.bind(this);
+        this.dismissModal = this.dismissModal.bind(this);
     }
 
+    showActionSheet(){
+        const BUTTONS = ['从相册选择', '取消'];
+        ActionSheet.showActionSheetWithOptions({
+            options: BUTTONS,
+            cancelButtonIndex: BUTTONS.length - 1,
+            destructiveButtonIndex: BUTTONS.length - 2
+        }, (buttonIndex) => {
+            if(buttonIndex===0){
+                ImagePicker.openPicker({
+                    width: width,
+                    height:300,
+                    cropping: true,
+                    showCropGuidelines:true,
+                    includeBase64:true,
+                    compressImageMaxWidth:width,
+                    compressImageMaxHeight:300,
+                    mediaType:'phone'
+                }).then(image => {
+                    this.setState({
+                        picture:image.data
+                    });
+                },cancel=>{});
+            }
+        })
+    }
+
+    dismissModal(){
+        if(this.state.picture) {
+            this.setState({
+                picture: ''
+            });
+        }
+        this.props.switchModal();
+    }
+
+
     render() {
-        const {visible, switchModal} = this.props;
+        const {visible} = this.props;
         return (
-            <Modal visible={visible} animationType={'slide'}>
-                <View style={styles.container}>
-                    <View style={styles.headerContainer}>
-                        <TouchableOpacity onPress={switchModal}>
-                            <Icon name={'ios-close-outline'} size={32} style={{color: 'rgba(0, 0, 0, 0.65098)'}}/>
-                        </TouchableOpacity>
-                        <Text style={{fontSize: 18}}>提问</Text>
-                        <TouchableOpacity disabled={!this.state.questionTitle} onPress={this.submit}>
-                            <Text style={{color: this.state.questionTitle ? '#1890ff' : 'rgba(0, 0, 0, 0.65098)'}}>发布</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View>
-                        <TextInput
-                            style={styles.input}
-                            multiline={true}
-                            autoCapitalize={'none'}
-                            underlineColorAndroid={"transparent"}
-                            placeholder={'输入问题并以问号结尾'}
-                            autoCorrect={false}
-                            autoFocus={true}
-                            clearButtonMode={'always'}
-                            onChangeText={question => {
-                                this.editQuestion(question)
-                            }}
-                            maxHeight={100}
-                        />
+            <Modal visible={visible} animationType={'slide'} onRequestClose={this.dismissModal}>
+                <ScrollView>
+                    <View style={styles.container}>
+                        <View style={styles.headerContainer}>
+                            <TouchableOpacity onPress={this.dismissModal}>
+                                <Icon name={'ios-close-outline'} size={32} style={{color: 'rgba(0, 0, 0, 0.65098)'}}/>
+                            </TouchableOpacity>
+                            <Text style={{fontSize: 18}}>提问</Text>
+                            <TouchableOpacity disabled={!this.state.questionTitle} onPress={this.submit}>
+                                <Text
+                                    style={{color: this.state.questionTitle ? '#1890ff' : 'rgba(0, 0, 0, 0.65098)'}}>发布</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <View>
+                            <TextInput
+                                style={styles.input}
+                                multiline={true}
+                                autoCapitalize={'none'}
+                                underlineColorAndroid={"transparent"}
+                                placeholder={'输入问题并以问号结尾'}
+                                autoCorrect={false}
+                                autoFocus={true}
+                                clearButtonMode={'always'}
+                                onChangeText={question => {
+                                    this.editQuestion(question)
+                                }}
+                                maxHeight={100}
+                            />
 
-                        <TextInput
-                            style={styles.input}
-                            multiline={true}
-                            autoCapitalize={'none'}
-                            underlineColorAndroid={"transparent"}
-                            placeholder={'添加问题描述（选填）'}
-                            autoCorrect={false}
-                            clearButtonMode={'always'}
-                            onChangeText={question => {
-                                this.editQuestionDetail(question)
-                            }}
-                            maxHeight={200}
-                        />
+                            <TextInput
+                                style={styles.input}
+                                multiline={true}
+                                autoCapitalize={'none'}
+                                underlineColorAndroid={"transparent"}
+                                placeholder={'添加问题描述（选填）'}
+                                autoCorrect={false}
+                                clearButtonMode={'always'}
+                                onChangeText={question => {
+                                    this.editQuestionDetail(question)
+                                }}
+                                maxHeight={200}
+                            />
 
+                        </View>
+                        <View style={styles.footerContainer}>
+                            <Text>匿名提问</Text>
+                            <Switch
+                                onTintColor={'#1890ff'}
+                                value={this.state.switchValue}
+                                onValueChange={value => this.switchNoName(value)}
+                            />
+                        </View>
+                        <View style={styles.footerContainer}>
+                            <Text>上传图片</Text>
+                            <TouchableOpacity style={styles.pictureView} onPress={this.showActionSheet}>
+                                <Icon name={'md-albums'} size={24} color={'#8c8c8c'}/>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.pictureShowView}>
+                            <Image
+                                style={styles.avatarStyle}
+                                source={{uri: `data:image/png;base64,${this.state.picture}`}}
+                            />
+                        </View>
                     </View>
-                    <View style={styles.footerContainer}>
-                        <Text>匿名提问</Text>
-                        <Switch
-                            onTintColor={'#1890ff'}
-                            value={this.state.switchValue}
-                            onValueChange={value => this.switchNoName(value)}
-                        />
-                    </View>
-                </View>
+                </ScrollView>
             </Modal>
         )
     }
@@ -91,7 +149,7 @@ class AskQuestionView extends React.Component {
      */
     editQuestionDetail(question) {
         this.setState({
-            questionDetail:question.trim()
+            questionDetail: question.trim()
         })
     }
 
@@ -114,9 +172,9 @@ class AskQuestionView extends React.Component {
         }
     }
 
-    submit(){ //提交问题
-        const title = /^.*[？?]$/.test(this.state.questionTitle)?this.state.questionTitle:this.state.questionTitle+'?';
-        this.props.submitQuestion(title,this.state.questionDetail,this.state.switchValue);
+    submit() { //提交问题
+        const title = /^.*[？?]$/.test(this.state.questionTitle) ? this.state.questionTitle : this.state.questionTitle + '?';
+        this.props.submitQuestion(title, this.state.questionDetail, this.state.switchValue);
         this.props.switchModal();
     }
 
@@ -125,7 +183,6 @@ class AskQuestionView extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fafafa'
     },
     headerContainer: {
         marginTop: 20,
@@ -150,15 +207,25 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
         borderBottomWidth: 1,
         borderColor: '#e8e8e8'
+    },
+    pictureView:{
+        marginRight:10
+    },
+    pictureShowView:{
+        marginTop:20
+    },
+    avatarStyle:{
+        width:width,
+        height:300
     }
 });
 
-const mapDispatchToProps = dispatch=>{
-    return{
-       submitQuestion:(title,detail,noName)=>{
-           dispatch(submitQuestion(title,detail,noName))
-       }
+const mapDispatchToProps = dispatch => {
+    return {
+        submitQuestion: (title, detail, noName) => {
+            dispatch(submitQuestion(title, detail, noName))
+        }
     }
 };
 
-export default connect(null,mapDispatchToProps)(AskQuestionView)
+export default connect(null, mapDispatchToProps)(AskQuestionView)

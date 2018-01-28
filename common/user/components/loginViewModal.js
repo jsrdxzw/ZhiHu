@@ -34,7 +34,7 @@ export default class LoginViewModal extends React.PureComponent {
         const canClick = !!(this.state.email && this.state.password);
         const color = canClick?'#1890FF':'#69C0FF';
         return (
-            <Modal visible={visible} animationType={'slide'}>
+            <Modal visible={visible} animationType={'slide'} onRequestClose={switchModal}>
                 {this.state.registerVisible ?
                     <RegisterModal visible={this.state.registerVisible} switchRegisterModal={this.switchRegisterModal} dismissAllModal={this.dismissAllModal}/>:null
                 }
