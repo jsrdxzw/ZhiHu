@@ -16,10 +16,10 @@ function submitQst(data) {
  * @param detail 提问细节，非必须
  * function:
  */
-export const submitQuestion = (title,detail,noName)=>{
+export const submitQuestion = (title,detail,noName,path)=>{
     return (dispatch,getState)=>{
           const authorID = getState().user._id;
-        fetchUrl('/api/question/submitQst','post',{title,detail,authorID,noName}).then(res=>{
+          fetchUrl('/api/question/submitQst','post',{title,detail,authorID,noName}).then(res=>{
             const {err} = res;
             if(!err){
                 dispatch(submitQst({title,detail}))

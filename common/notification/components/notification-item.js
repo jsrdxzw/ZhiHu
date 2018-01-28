@@ -65,7 +65,7 @@ class NotificationItem extends React.PureComponent {
                         <View style={styles.infoContainer}>
                             <View>
                                 <Text>{notification.from_user.name + ' ' + this.getType(type)}&nbsp;
-                                    <Text style={styles.titleStyle}>{type==='comment'?notification.comment.content:notification.question.title}</Text>
+                                    <Text style={styles.titleStyle}>{type==='comment'?notification.comment.content:notification.question&&notification.question.title}</Text>
                                 </Text>
                             </View>
                             <View style={styles.footerContainer}>

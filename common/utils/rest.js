@@ -4,6 +4,7 @@ import moment from "moment/moment";
 import {connectSocket, sendMessage} from './websocket';
 import {getDistance} from './math';
 import {AsyncStorage} from "react-native";
+import {uploadImage} from './uploadImage';
 
 
 export const getLastestQuestion = (skipCount) => {
@@ -615,6 +616,21 @@ export const cancelAgreeAndDisagree = (comment_id,to_id,status)=>{
                 return Promise.reject('err');
             }
         })
+};
+
+
+/** 2018/1/28
+ * author: XU ZHI WEI
+ * function:提交问题
+ */
+export const submitQuestion = (title,detail,noName,path)=>{
+        const authorID = Store.getState().user._id;
+        if(!path) {
+            fetchUrl('/api/question/submitQst', 'post', {title, detail, authorID, noName}).then(res => {
+            })
+        } else {
+            uploadImage('/api/question/submitQstWithPic',title,detail,noName,authorID,path)
+        }
 };
 
 

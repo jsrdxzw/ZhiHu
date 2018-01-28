@@ -1,6 +1,9 @@
 import React from 'react';
-import {View, StyleSheet, Image, Text, TouchableOpacity} from 'react-native';
+import {View, StyleSheet, Image, Text, TouchableOpacity,Dimensions} from 'react-native';
 import {withNavigation} from 'react-navigation';
+import {baseUrl} from '../utils/uploadImage';
+
+const {width} = Dimensions.get('window');
 
 class QuestionItem extends React.PureComponent {
     constructor(props) {
@@ -22,6 +25,7 @@ class QuestionItem extends React.PureComponent {
                 <View style={styles.container}>
                     {this.questionHeader(question)}
                     <View style={styles.contentContainer}>
+                        {this.getQuestionImage(question)}
                         <Text style={styles.titleTextStyle}>{question.title}</Text>
                         <Text
                             style={styles.contentTextStyle}
@@ -56,12 +60,20 @@ class QuestionItem extends React.PureComponent {
             )
         }
     }
+
+    getQuestionImage(question){
+        if(question.filename){
+            return <Image source={{uri:`${baseUrl}/uploads/${question.filename}`}} style={styles.questionImageStyle}/>
+        } else {
+            return null
+        }
+    }
 }
 
 const styles = StyleSheet.create({
     container: {
         backgroundColor: '#fff',
-        padding: 10,
+        paddingVertical: 10,
         marginTop: 10
     },
     avatarStyle: {
@@ -74,24 +86,28 @@ const styles = StyleSheet.create({
         marginVertical: 10
     },
     titleTextStyle:{
-        fontSize: 18
+        fontSize: 18,
+        paddingHorizontal:10
     },
     contentTextStyle:{
         marginTop: 10,
         fontSize: 15,
-        color: 'rgba(0, 0, 0, 0.75098)'
+        color: 'rgba(0, 0, 0, 0.75098)',
+        paddingHorizontal:10
     },
     footerContainer: {
         flexDirection: 'row',
-        marginTop: 10
+        marginTop: 10,
+        paddingHorizontal:10
     },
     headerContainer: {
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
+        paddingHorizontal:10
     },
     footerTextStyle:{
         color: 'rgba(0, 0, 0, 0.55098)',
-        fontSize: 12
+        fontSize: 12,
     },
     nameTextStyle:{
         color: 'rgba(0, 0, 0, 0.55098)',
@@ -99,6 +115,12 @@ const styles = StyleSheet.create({
     },
     noNameTextStyle:{
         color: 'rgba(0, 0, 0, 0.55098)'
+    },
+    questionImageStyle:{
+        width:width,
+        height:300,
+        marginVertical:10,
+        resizeMode:Image.resizeMode.contain
     }
 });
 

@@ -6,7 +6,7 @@ import ZuiXinComponent from "../zuixin/zuixinComponent";
 import GuanZhuComponent from "../guanzhu/guanzhuComponent";
 import ReMenComponent from "../remen/remenComponent";
 import LoginViewModal from "../../user/components/loginViewModal";
-import AskQuestionView from "../components/askQuestionView";
+import AskQuestionView from "../../common-component/askQuestionView";
 import SearchViewModal from "../../search/main-view";
 
 const tabs = [

@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, StyleSheet, Text, TouchableOpacity, FlatList, ActivityIndicator} from 'react-native';
-import AskQuestionView from "../../home/components/askQuestionView";
+import AskQuestionView from "../../common-component/askQuestionView";
 import Icon from 'react-native-vector-icons/Ionicons';
 import {getCollections, deleteCollections} from '../../utils/storage';
 import CollectionItem from "./collection-item";

@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, StyleSheet, Text, TouchableOpacity, FlatList,ActivityIndicator,Platform} from 'react-native';
 import QuestionItem from "./questionItem";
-import AskQuestionView from "../../home/components/askQuestionView";
+import AskQuestionView from "../../common-component/askQuestionView";
 import Icon from 'react-native-vector-icons/Ionicons';
 import {getQuestions,refreshQuestion} from '../../utils/rest';
 

@@ -2,15 +2,16 @@ import React from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Modal, StyleSheet, View, Text, TouchableOpacity, TextInput, Switch, Alert, ScrollView,Dimensions,Image} from 'react-native';
 import {connect} from 'react-redux';
-import {submitQuestion} from '../actions';
+import {submitQuestion} from '../utils/rest';
 import ImagePicker from "react-native-image-crop-picker";
 import {ActionSheet} from "antd-mobile/lib/index";
 
 const {width} = Dimensions.get('window');
 
-class AskQuestionView extends React.Component {
+export default class AskQuestionView extends React.PureComponent {
     constructor(props) {
         super(props);
+        this.path = ''; //图片的地址
         this.state = {
             questionTitle: '',
             questionDetail: '',
@@ -45,6 +46,7 @@ class AskQuestionView extends React.Component {
                     this.setState({
                         picture:image.data
                     });
+                    image.path&&(this.path = image.path);
                 },cancel=>{});
             }
         })
@@ -52,6 +54,7 @@ class AskQuestionView extends React.Component {
 
     dismissModal(){
         if(this.state.picture) {
+            this.path='';
             this.setState({
                 picture: ''
             });
@@ -174,8 +177,11 @@ class AskQuestionView extends React.Component {
 
     submit() { //提交问题
         const title = /^.*[？?]$/.test(this.state.questionTitle) ? this.state.questionTitle : this.state.questionTitle + '?';
-        this.props.submitQuestion(title, this.state.questionDetail, this.state.switchValue);
+        submitQuestion(title, this.state.questionDetail, this.state.switchValue,this.path);
         this.props.switchModal();
+        this.setState({
+            picture:''
+        })
     }
 
 }
@@ -212,7 +218,7 @@ const styles = StyleSheet.create({
         marginRight:10
     },
     pictureShowView:{
-        marginTop:20
+        marginVertical:20,
     },
     avatarStyle:{
         width:width,
@@ -220,12 +226,12 @@ const styles = StyleSheet.create({
     }
 });
 
-const mapDispatchToProps = dispatch => {
-    return {
-        submitQuestion: (title, detail, noName) => {
-            dispatch(submitQuestion(title, detail, noName))
-        }
-    }
-};
-
-export default connect(null, mapDispatchToProps)(AskQuestionView)
+// const mapDispatchToProps = dispatch => {
+//     return {
+//         submitQuestion: (title, detail, noName,path) => {
+//             dispatch(submitQuestion(title, detail, noName,path))
+//         }
+//     }
+// };
+//
+// export default connect(null, mapDispatchToProps)(AskQuestionView)
