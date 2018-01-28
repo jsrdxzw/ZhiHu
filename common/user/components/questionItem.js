@@ -16,7 +16,7 @@ export default class QuestionItem extends React.PureComponent {
         return (
             <TouchableOpacity onPress={this.gotoDetail}>
                 <View style={styles.container}>
-                    <Text style={{fontSize: 16}}>{type==='answer'?question.questionId.title:question.title}</Text>
+                    <Text style={{fontSize: 16}}>{type==='answer'?question.questionId&&question.questionId.title:question.title}</Text>
                     <View style={styles.footerContainer}>
                         <Text style={{marginTop: 5, fontSize: 12, color: 'rgba(0, 0, 0, 0.45098)'}}>
                             {type==='answer'?question.content:(question.commentcount || 0)+'回答'} &nbsp;|&nbsp;{from_now}

@@ -75,7 +75,7 @@ export default class UserCenter extends React.Component {
                             <ItemCard title={'私の回答'} to={'myQuestionList'} navigation={this.props.navigation} type={'answer'}/>
                         </View>
                         <View style={{marginTop: 20}}>
-                            <ItemCard title={'私のコレクション'} to={'collectionList'} navigation={this.props.navigation}/>
+                            <ItemCard title={'私のコレクション'} to={'collectionList'} navigation={this.props.navigation} type={'collection'}/>
                         </View>
 
                         <View style={{marginTop: 20}}>
