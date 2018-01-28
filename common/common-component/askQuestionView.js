@@ -1,7 +1,6 @@
 import React from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Modal, StyleSheet, View, Text, TouchableOpacity, TextInput, Switch, Alert, ScrollView,Dimensions,Image} from 'react-native';
-import {connect} from 'react-redux';
 import {submitQuestion} from '../utils/rest';
 import ImagePicker from "react-native-image-crop-picker";
 import {ActionSheet} from "antd-mobile/lib/index";
@@ -11,21 +10,21 @@ const {width} = Dimensions.get('window');
 export default class AskQuestionView extends React.PureComponent {
     constructor(props) {
         super(props);
-        this.path = ''; //图片的地址
+        this.path = []; //图片的地址
         this.state = {
             questionTitle: '',
             questionDetail: '',
             switchValue: false,
-            picture:''
+            picture1:'',
+            picture2:''
         };
         this.editQuestion = this.editQuestion.bind(this);
         this.editQuestionDetail = this.editQuestionDetail.bind(this);
         this.submit = this.submit.bind(this);
-        this.showActionSheet = this.showActionSheet.bind(this);
         this.dismissModal = this.dismissModal.bind(this);
     }
 
-    showActionSheet(){
+    showActionSheet(index=0){
         const BUTTONS = ['从相册选择', '取消'];
         ActionSheet.showActionSheetWithOptions({
             options: BUTTONS,
@@ -41,12 +40,19 @@ export default class AskQuestionView extends React.PureComponent {
                     includeBase64:true,
                     compressImageMaxWidth:width,
                     compressImageMaxHeight:300,
-                    mediaType:'phone'
+                    mediaType:'phone',
                 }).then(image => {
-                    this.setState({
-                        picture:image.data
-                    });
-                    image.path&&(this.path = image.path);
+                    if(index===0){
+                        this.setState({
+                            picture1:image.data
+                        });
+                        image.path&&(this.path[0] = image.path);
+                    } else {
+                        this.setState({
+                            picture2:image.data
+                        });
+                        image.path&&(this.path[1] = image.path);
+                    }
                 },cancel=>{});
             }
         })
@@ -56,7 +62,8 @@ export default class AskQuestionView extends React.PureComponent {
         if(this.state.picture) {
             this.path='';
             this.setState({
-                picture: ''
+                picture1: '',
+                picture2:''
             });
         }
         this.props.switchModal();
@@ -119,17 +126,19 @@ export default class AskQuestionView extends React.PureComponent {
                             />
                         </View>
                         <View style={styles.footerContainer}>
-                            <Text>上传图片</Text>
-                            <TouchableOpacity style={styles.pictureView} onPress={this.showActionSheet}>
+                            <Text>图片1(可选)</Text>
+                            <TouchableOpacity style={styles.pictureView} onPress={()=>this.showActionSheet(0)}>
                                 <Icon name={'md-albums'} size={24} color={'#8c8c8c'}/>
                             </TouchableOpacity>
                         </View>
-                        <View style={styles.pictureShowView}>
-                            <Image
-                                style={styles.avatarStyle}
-                                source={{uri: `data:image/png;base64,${this.state.picture}`}}
-                            />
+                        {this.getImageView('picture1')}
+                        <View style={styles.footerContainer}>
+                            <Text>图片2(可选)</Text>
+                            <TouchableOpacity style={styles.pictureView} onPress={()=>this.showActionSheet(1)}>
+                                <Icon name={'md-albums'} size={24} color={'#8c8c8c'}/>
+                            </TouchableOpacity>
                         </View>
+                        {this.getImageView('picture2')}
                     </View>
                 </ScrollView>
             </Modal>
@@ -180,8 +189,24 @@ export default class AskQuestionView extends React.PureComponent {
         submitQuestion(title, this.state.questionDetail, this.state.switchValue,this.path);
         this.props.switchModal();
         this.setState({
-            picture:''
+            picture1:'',
+            picture2:'',
         })
+    }
+
+    getImageView(picture){
+        if(this.state[picture]) {
+            return (
+                <View style={styles.pictureShowView}>
+                    <Image
+                        style={styles.avatarStyle}
+                        source={{uri: `data:image/png;base64,${this.state[picture]}`}}
+                    />
+                </View>
+            )
+        } else {
+            return null
+        }
     }
 
 }

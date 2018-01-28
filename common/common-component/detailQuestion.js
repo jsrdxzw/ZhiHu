@@ -8,7 +8,8 @@ import {
     FlatList,
     Platform,
     ActivityIndicator,
-    Alert
+    Alert,
+    Image
 } from 'react-native';
 import {Toast} from 'antd-mobile';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -17,8 +18,9 @@ import fetchUrl from '../utils/fetch';
 import moment from "moment/moment";
 import AnswerQuestionItem from "./answer-question-item";
 import {connect} from 'react-redux';
-import {ifConcernQuestion,concernQuestion,cancelConcernQuestion} from '../utils/rest';
+import {ifConcernQuestion, concernQuestion, cancelConcernQuestion} from '../utils/rest';
 import ConcernButton from "./concernButton";
+import {baseUrl} from "../utils/uploadImage";
 
 const width = Dimensions.get('window').width;
 
@@ -63,14 +65,14 @@ class DetailQuestion extends React.PureComponent {
             })
     }
 
-    inviteAnswer(){
+    inviteAnswer() {
         const {params} = this.props.navigation.state;
-        if(!params.question.authorID.email){
-               Alert.alert('提示','匿名问题不能邀请别人回答');
-               return;
+        if (!params.question.authorID.email) {
+            Alert.alert('提示', '匿名问题不能邀请别人回答');
+            return;
         }
-        if(!this.props.user.isLogin) {
-            Toast.info('先にログインしてください',1);
+        if (!this.props.user.isLogin) {
+            Toast.info('先にログインしてください', 1);
             return;
         }
         this.props.navigation.navigate('inviteAnswerPage', {question: params.question});
@@ -114,13 +116,14 @@ class DetailQuestion extends React.PureComponent {
         return (
             <View>
                 <View style={styles.QuestionContainer}>
-                    <Text style={{fontSize: 16}}>
+                    <Text style={styles.questionTitleText}>
                         {params.question.title}
                     </Text>
-                    <Text style={{fontSize: 14, color: 'rgba(0, 0, 0, 0.85098)', marginVertical: 10}}>
+                    <Text style={styles.questionDetailText}>
                         {params.question.detail}
                     </Text>
-                    <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+                    {this.getPicturesView(params.question.filenames)}
+                    <View style={styles.questionFooterContainer}>
                         <Text style={{
                             fontSize: 12,
                             color: 'rgba(0, 0, 0, 0.65098)'
@@ -170,7 +173,8 @@ class DetailQuestion extends React.PureComponent {
      * function:显示关注按钮
      */
     getConcernView() {
-        return <ConcernButton ifConcern={this.state.concern} concern={this.concern} cancelConcern={this.cancelConcern} title={'关注问题'}/>
+        return <ConcernButton ifConcern={this.state.concern} concern={this.concern} cancelConcern={this.cancelConcern}
+                              title={'关注问题'}/>
     }
 
     switchModal() {
@@ -184,10 +188,10 @@ class DetailQuestion extends React.PureComponent {
      * function:用户添加回答
      */
     addAnswer() {
-        if(this.props.user.isLogin){
+        if (this.props.user.isLogin) {
             this.switchModal();
         } else {
-            Toast.info('先にログインしてください',1)
+            Toast.info('先にログインしてください', 1)
         }
     }
 
@@ -217,13 +221,13 @@ class DetailQuestion extends React.PureComponent {
         const {params} = this.props.navigation.state;
         if (this.firstLoad) { //表示初次加载
             this.setState({
-                loadingMore:true
+                loadingMore: true
             });
             this.firstLoad = false;
             this.fetchComments(params.question._id)
         } else if (this.state.count > this.state.comments.length && !this.isLoading) {
             this.setState({
-                loadingMore:true
+                loadingMore: true
             });
             this.isLoading = true;
             this.fetchComments(params.question._id)
@@ -252,20 +256,20 @@ class DetailQuestion extends React.PureComponent {
             })
     }
 
-    concern(){ //关注问题
+    concern() { //关注问题
         const {params} = this.props.navigation.state;
-        concernQuestion(params.question._id).then(()=>{
+        concernQuestion(params.question._id).then(() => {
             this.setState({
-                concern:true
+                concern: true
             })
         })
     }
 
-    cancelConcern(){ //取消关注问题
+    cancelConcern() { //取消关注问题
         const {params} = this.props.navigation.state;
-        cancelConcernQuestion(params.question._id).then(()=>{
+        cancelConcernQuestion(params.question._id).then(() => {
             this.setState({
-                concern:false
+                concern: false
             })
         })
     }
@@ -275,10 +279,21 @@ class DetailQuestion extends React.PureComponent {
             comments: [{
                 ...comment,
                 from_now: moment(comment.created_at).fromNow(),
-                authorId: comment.noName?this.props.user._id:this.props.user
+                authorId: comment.noName ? this.props.user._id : this.props.user
             }, ...this.state.comments],
             count: this.state.count + 1
         })
+    }
+
+    getPicturesView(filenames) {
+        if (filenames) {
+            return filenames.map(filename => (
+                <Image key={filename} source={{uri: `${baseUrl}/uploads/${filename}`}}
+                       style={styles.questionImageStyle}/>
+            ))
+        } else {
+            return null
+        }
     }
 }
 
@@ -287,11 +302,29 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#e8e8e8'
     },
+    questionTitleText: {
+        fontSize: 16,
+    },
+    questionDetailText: {
+        fontSize: 14,
+        color: 'rgba(0, 0, 0, 0.85098)',
+        marginVertical: 10
+    },
+    questionFooterContainer:{
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    },
     QuestionContainer: {
         padding: 10,
         backgroundColor: '#fff'
+    },
+    questionImageStyle: {
+        width: width-20,
+        height: 300,
+        marginVertical: 10,
+        resizeMode: Image.resizeMode.contain
     }
-
 });
 
 const mapStateToProps = state => {

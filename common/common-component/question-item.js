@@ -62,8 +62,8 @@ class QuestionItem extends React.PureComponent {
     }
 
     getQuestionImage(question){
-        if(question.filename){
-            return <Image source={{uri:`${baseUrl}/uploads/${question.filename}`}} style={styles.questionImageStyle}/>
+        if(question.filenames){
+            return <Image source={{uri:`${baseUrl}/uploads/${question.filenames[0]}`}} style={styles.questionImageStyle}/>
         } else {
             return null
         }

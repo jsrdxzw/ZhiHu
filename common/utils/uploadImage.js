@@ -3,12 +3,13 @@ export const baseUrl = 'http://10.0.1.5:3333';
 
 export const uploadImage = (url,title,detail,noName,authorID,path)=>{
     const data = new FormData();
-    const file = {uri: path, type: 'image/jpg',name: 'photoName'};
     data.append('title',title);
     data.append('detail',detail);
     data.append('noName',noName);
     data.append('authorID',authorID);
-    data.append('picture',file);
+    for(let i=0;i<path.length;i++){
+        data.append('pictures',{uri: path[i], type: 'image/jpg',name: 'photoName'});
+    }
     return fetch(`${baseUrl}${url}`,{
         method:'post',
         headers:{
