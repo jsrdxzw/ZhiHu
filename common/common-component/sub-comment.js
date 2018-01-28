@@ -22,6 +22,7 @@ class SubComment extends React.Component {
         this.agreeComment = this.agreeComment.bind(this);
         this.disagreeComment = this.disagreeComment.bind(this);
         this.gotoSubDetailPage = this.gotoSubDetailPage.bind(this);
+        this.dismissFooterView = this.dismissFooterView.bind(this);
     }
 
     componentDidMount() {
@@ -126,11 +127,20 @@ class SubComment extends React.Component {
             }, err => Toast.info(err, 1))
     }
 
+    dismissFooterView(){
+        if(this.state.showAgreeView){
+            this.setState({
+                showAgreeView:false
+            })
+        }
+    }
+
 
     render() {
         const {comment} = this.props.navigation.state.params;
 
         return (
+            <TouchableOpacity style={{flex:1}} activeOpacity={1} onPress={this.dismissFooterView}>
             <View style={styles.container}>
                 <ScrollView>
                     <View style={styles.userInfoStyle}>
@@ -150,16 +160,16 @@ class SubComment extends React.Component {
                         </TouchableOpacity>
                     </View>
                     <View style={{backgroundColor: '#e8e8e8', height: 10}}/>
-                    <View style={styles.commentContainer}>
-                        <Text style={{marginHorizontal: 10, marginVertical: 15, fontSize: 16}}>
-                            {comment.content}
-                        </Text>
-                        <View style={{alignItems: 'flex-end', marginRight: 10, marginTop: 10}}>
-                            <Text
-                                style={{color: 'rgba(0, 0, 0, 0.247059)'}}>{moment(comment.created_at).format('ll')}</Text>
-                            <Text style={{marginTop: 10, color: 'rgba(0, 0, 0, 0.247059)'}}>著作权归作者所有</Text>
+                        <View style={styles.commentContainer}>
+                            <Text style={{marginHorizontal: 10, marginVertical: 15, fontSize: 16}}>
+                                {comment.content}
+                            </Text>
+                            <View style={{alignItems: 'flex-end', marginRight: 10, marginTop: 10}}>
+                                <Text
+                                    style={{color: 'rgba(0, 0, 0, 0.247059)'}}>{moment(comment.created_at).format('ll')}</Text>
+                                <Text style={{marginTop: 10, color: 'rgba(0, 0, 0, 0.247059)'}}>著作权归作者所有</Text>
+                            </View>
                         </View>
-                    </View>
                 </ScrollView>
                 {this.state.showAgreeView ? this.showAgreeView() :
                     <View style={styles.footerContainer}>
@@ -182,6 +192,7 @@ class SubComment extends React.Component {
                     </View>
                 }
             </View>
+            </TouchableOpacity>
         )
     }
 
@@ -211,7 +222,7 @@ class SubComment extends React.Component {
         switch (status) {
             case 0:
                 return (
-                    <TouchableOpacity onPress={()=>this.cancelAgree(0)} disabled={this.state.clickDisabled}>
+                    <TouchableOpacity onPress={() => this.cancelAgree(0)} disabled={this.state.clickDisabled}>
                         <View style={{justifyContent: 'center', alignItems: 'center'}}>
                             <Icon name={'md-thumbs-down'} color={'#f759ab'} size={16}/>
                             <Text style={{color: '#f759ab', fontSize: 12}}>已反对</Text>
@@ -220,7 +231,7 @@ class SubComment extends React.Component {
                 );
             case 1:
                 return (
-                    <TouchableOpacity onPress={()=>this.cancelAgree(1)} disabled={this.state.clickDisabled}>
+                    <TouchableOpacity onPress={() => this.cancelAgree(1)} disabled={this.state.clickDisabled}>
                         <View style={{justifyContent: 'center', alignItems: 'center'}}>
                             <Icon name={'md-thumbs-up'} color={'#40A9FF'} size={16}/>
                             <Text style={{color: '#40A9FF', fontSize: 12}}>已赞同</Text>
@@ -268,7 +279,7 @@ const styles = StyleSheet.create({
     },
     commentContainer: {
         flex: 1,
-        marginTop: 10
+        marginTop: 10,
     },
     footerContainer: {
         paddingVertical: 5,

@@ -10,7 +10,8 @@ import {
     Text,
     ScrollView,
     Image,
-    ActivityIndicator
+    ActivityIndicator,
+    Platform
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {registerUser} from '../../utils/rest';
@@ -18,7 +19,6 @@ import {register_success} from '../actions';
 import {connect} from 'react-redux';
 import ImagePicker from 'react-native-image-crop-picker';
 import {ActionSheet} from 'antd-mobile';
-
 
 const {width, height} = Dimensions.get('window');
 
@@ -31,7 +31,7 @@ class RegisterModal extends React.PureComponent {
             password: '',
             rePassword: '',
             errorMsg: '',
-            avatar:'',
+            avatar: '',
             indicator: false //加载进度的动画
         };
         this.startRegister = this.startRegister.bind(this);
@@ -39,12 +39,12 @@ class RegisterModal extends React.PureComponent {
     }
 
     startRegister() {
-        const {userName,password,email,avatar} = this.state;
-        if(this.validateRstInfo()){
-            registerUser(userName, password,email,avatar).then((user) => {
+        const {userName, password, email, avatar} = this.state;
+        if (this.validateRstInfo()) {
+            registerUser(userName, password, email, avatar).then((user) => {
                 this.props.dismissAllModal();
                 return user;
-            }).then((user)=>{
+            }).then((user) => {
                 this.props.registerSuccess(user);
             }).catch(err => {
                 this.setState({
@@ -78,48 +78,49 @@ class RegisterModal extends React.PureComponent {
         }
     }
 
-    showActionSheet(){
+    showActionSheet() {
         const BUTTONS = ['从相册选择', '取消'];
         ActionSheet.showActionSheetWithOptions({
             options: BUTTONS,
             cancelButtonIndex: BUTTONS.length - 1,
             destructiveButtonIndex: BUTTONS.length - 2
         }, (buttonIndex) => {
-            if(buttonIndex===0){
+            if (buttonIndex === 0) {
                 ImagePicker.openPicker({
                     width: 48,
                     height: 48,
                     cropping: true,
-                    showCropGuidelines:true,
-                    includeBase64:true,
-                    compressImageMaxWidth:48,
-                    compressImageMaxHeight:48,
-                    compressImageQuality:0.8,
-                    mediaType:'phone'
+                    showCropGuidelines: true,
+                    includeBase64: true,
+                    compressImageMaxWidth: 48,
+                    compressImageMaxHeight: 48,
+                    compressImageQuality: 0.8,
+                    mediaType: 'phone'
                 }).then(image => {
                     this.setState({
-                        avatar:image.data
+                        avatar: image.data
                     });
-                },cancel=>{});
+                }, cancel => {
+                });
             }
         })
     }
 
-    validateRstInfo(){
-        const {email,userName,password,rePassword,avatar} = this.state;
-        if(!email){
+    validateRstInfo() {
+        const {email, userName, password, rePassword, avatar} = this.state;
+        if (!email) {
             this.showError('请填写邮件');
             return false;
         }
-        if(!userName){
+        if (!userName) {
             this.showError('请填写昵称');
             return false;
         }
-        if(!password){
+        if (!password) {
             this.showError('请设置密码');
             return false;
         }
-        if(!avatar){
+        if (!avatar) {
             this.showError('请选择一个头像');
             return false;
         }
@@ -142,97 +143,98 @@ class RegisterModal extends React.PureComponent {
                 <ImageBackground source={require('../../imgs/register.jpg')} style={styles.imageBackgroundStyle}
                                  resizeMode={'cover'}>
                     <ScrollView>
-                        <View style={styles.headerContainer}>
-                            <TouchableOpacity onPress={switchRegisterModal}>
-                                <Icon name={'ios-close-outline'} size={48}
-                                      style={{color: '#fff'}}/>
+                        <View>
+                            <View style={styles.headerContainer}>
+                                <TouchableOpacity onPress={switchRegisterModal}>
+                                    <Icon name={'ios-close-outline'} size={48}
+                                          style={{color: '#fff'}}/>
+                                </TouchableOpacity>
+                            </View>
+                            <View style={styles.avatarContainer}>
+                                <TouchableOpacity onPress={this.showActionSheet}>
+                                    <Image style={styles.avatarStyle}
+                                           source={this.state.avatar ? {uri: `data:image/png;base64,${this.state.avatar}`} : require('../../imgs/avatar.jpg')}
+                                    />
+                                </TouchableOpacity>
+                            </View>
+                            <View style={styles.registerContainer}>
+                                <View style={styles.inputContainer}>
+                                    <Icon name={'ios-mail'} size={28} color={'#000'}/>
+                                    <TextInput
+                                        style={styles.inputStyle}
+                                        underlineColorAndroid={"transparent"}
+                                        placeholder={'邮箱'}
+                                        maxLength={30}
+                                        autoCorrect={false}
+                                        keyboardType={'email-address'}
+                                        autoCapitalize={'none'}
+                                        placeholderTextColor={'#fff'}
+                                        clearButtonMode={'while-editing'}
+                                        selectionColor={'#fff'}
+                                        onChangeText={text => this.setState({email: text.trim()})}
+                                    />
+                                </View>
+
+                                <View style={styles.inputContainer}>
+                                    <Icon name={'md-person'} size={28} color={'#000'}/>
+                                    <TextInput
+                                        style={styles.inputStyle}
+                                        underlineColorAndroid={"transparent"}
+                                        placeholder={'用户昵称'}
+                                        maxLength={16}
+                                        autoCorrect={false}
+                                        autoCapitalize={'none'}
+                                        clearButtonMode={'while-editing'}
+                                        placeholderTextColor={'#fff'}
+                                        selectionColor={'#fff'}
+                                        onChangeText={text => this.setState({userName: text.trim()})}
+                                    />
+                                </View>
+
+                                <View style={styles.inputContainer}>
+                                    <Icon name={'md-key'} size={28} color={'#000'}/>
+                                    <TextInput
+                                        style={styles.inputStyle}
+                                        underlineColorAndroid={"transparent"}
+                                        placeholder={'密码'}
+                                        secureTextEntry={true}
+                                        maxLength={30}
+                                        autoCorrect={false}
+                                        autoCapitalize={'none'}
+                                        placeholderTextColor={'#fff'}
+                                        selectionColor={'#fff'}
+                                        clearButtonMode={'while-editing'}
+                                        onChangeText={text => this.setState({password: text.trim()})}
+                                    />
+                                </View>
+
+                                <View style={styles.inputContainer}>
+                                    <Icon name={'md-key'} size={28} color={'#000'}/>
+                                    <TextInput
+                                        style={styles.inputStyle}
+                                        underlineColorAndroid={"transparent"}
+                                        placeholder={'确认密码'}
+                                        secureTextEntry={true}
+                                        maxLength={30}
+                                        autoCorrect={false}
+                                        autoCapitalize={'none'}
+                                        selectionColor={'#fff'}
+                                        clearButtonMode={'while-editing'}
+                                        placeholderTextColor={'#fff'}
+                                        onChangeText={text => this.setState({rePassword: text.trim()})}
+                                    />
+                                </View>
+                                {this.state.errorMsg ?
+                                    <Text style={styles.errorMsgContainer}>{this.state.errorMsg}</Text> : null}
+                            </View>
+                            <TouchableOpacity onPress={this.startRegister} style={styles.registerBtn}
+                                              disabled={this.state.indicator}>
+                                {this.state.indicator ? <ActivityIndicator size={'small'} color={'#fff'}/> : null}
+                                <Text style={styles.registerText}>注册</Text>
                             </TouchableOpacity>
                         </View>
-                        <View style={styles.avatarContainer}>
-                            <TouchableOpacity onPress={this.showActionSheet}>
-                                <Image style={styles.avatarStyle}
-                                       source={this.state.avatar?{uri:`data:image/png;base64,${this.state.avatar}`}:require('../../imgs/avatar.jpg')}
-                                />
-                            </TouchableOpacity>
-                        </View>
-                        <View style={styles.registerContainer}>
-                            <View style={styles.inputContainer}>
-                                <Icon name={'ios-mail'} size={28} color={'#000'}/>
-                                <TextInput
-                                    style={styles.inputStyle}
-                                    underlineColorAndroid={"transparent"}
-                                    placeholder={'邮箱'}
-                                    maxLength={30}
-                                    autoCorrect={false}
-                                    keyboardType={'email-address'}
-                                    autoCapitalize={'none'}
-                                    placeholderTextColor={'#fff'}
-                                    clearButtonMode={'while-editing'}
-                                    selectionColor={'#fff'}
-                                    onChangeText={text => this.setState({email: text.trim()})}
-                                />
-                            </View>
-
-                            <View style={styles.inputContainer}>
-                                <Icon name={'md-person'} size={28} color={'#000'}/>
-                                <TextInput
-                                    style={styles.inputStyle}
-                                    underlineColorAndroid={"transparent"}
-                                    placeholder={'用户昵称'}
-                                    maxLength={16}
-                                    autoCorrect={false}
-                                    autoCapitalize={'none'}
-                                    clearButtonMode={'while-editing'}
-                                    placeholderTextColor={'#fff'}
-                                    selectionColor={'#fff'}
-                                    onChangeText={text => this.setState({userName: text.trim()})}
-                                />
-                            </View>
-
-                            <View style={styles.inputContainer}>
-                                <Icon name={'md-key'} size={28} color={'#000'}/>
-                                <TextInput
-                                    style={styles.inputStyle}
-                                    underlineColorAndroid={"transparent"}
-                                    placeholder={'密码'}
-                                    secureTextEntry={true}
-                                    maxLength={30}
-                                    autoCorrect={false}
-                                    autoCapitalize={'none'}
-                                    placeholderTextColor={'#fff'}
-                                    selectionColor={'#fff'}
-                                    clearButtonMode={'while-editing'}
-                                    onChangeText={text => this.setState({password: text.trim()})}
-                                />
-                            </View>
-
-                            <View style={styles.inputContainer}>
-                                <Icon name={'md-key'} size={28} color={'#000'}/>
-                                <TextInput
-                                    style={styles.inputStyle}
-                                    underlineColorAndroid={"transparent"}
-                                    placeholder={'确认密码'}
-                                    secureTextEntry={true}
-                                    maxLength={30}
-                                    autoCorrect={false}
-                                    autoCapitalize={'none'}
-                                    selectionColor={'#fff'}
-                                    clearButtonMode={'while-editing'}
-                                    placeholderTextColor={'#fff'}
-                                    onChangeText={text => this.setState({rePassword: text.trim()})}
-                                />
-                            </View>
-                            {this.state.errorMsg ?
-                                <Text style={styles.errorMsgContainer}>{this.state.errorMsg}</Text> : null}
-                        </View>
-                        <TouchableOpacity onPress={this.startRegister} style={styles.registerBtn}
-                                          disabled={this.state.indicator}>
-                            {this.state.indicator ? <ActivityIndicator size={'small'} color={'#fff'}/> : null}
-                            <Text style={styles.registerText}>注册</Text>
-                        </TouchableOpacity>
                     </ScrollView>
                 </ImageBackground>
-
             </Modal>
         );
     }
@@ -292,7 +294,8 @@ const styles = StyleSheet.create({
         marginTop: 40,
         marginHorizontal: 40,
         flexDirection: 'row',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        marginBottom:Platform.OS==='ios'?10:40
     },
     registerText: {
         color: '#fff',
@@ -312,7 +315,6 @@ const styles = StyleSheet.create({
         height: 54,
         borderRadius: 27,
         padding: 10,
-        backgroundColor: '#fff',
         resizeMode: Image.resizeMode.cover
     }
 });
