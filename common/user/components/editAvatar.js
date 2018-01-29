@@ -7,18 +7,6 @@ import {connect} from 'react-redux';
 import {editUserAvatar} from '../actions';
 
 class EditAvatarPage extends React.PureComponent{
-    constructor(props){
-        super(props);
-        this.state = {
-            data:''
-        };
-        this.showActionSheet = this.showActionSheet.bind(this);
-    }
-
-    componentDidMount(){
-        this.props.navigation.setParams({showActionSheet:this.showActionSheet})
-    }
-
     static navigationOptions = ({ navigation }) => {
         const { params = {} } = navigation.state;
         return {
@@ -27,6 +15,14 @@ class EditAvatarPage extends React.PureComponent{
         }
     };
 
+    constructor(props){
+        super(props);
+        this.state = {
+            data:''
+        };
+        this.showActionSheet = this.showActionSheet.bind(this);
+        this.props.navigation.setParams({showActionSheet:this.showActionSheet})
+    }
 
     showActionSheet(){
         const BUTTONS = ['从相册选择', '取消'];

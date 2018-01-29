@@ -30,11 +30,11 @@ export default class MyQuestionList extends React.Component {
         this.switchModal = this.switchModal.bind(this);
         this.refresh = this.refresh.bind(this);
         this.loadMore = this.loadMore.bind(this);
+        this.props.navigation.setParams({title:this.props.navigation.state.params.title});
     }
 
     componentDidMount(){
         this.loadMore();
-        this.props.navigation.setParams({title:this.props.navigation.state.params.title})
     }
 
 

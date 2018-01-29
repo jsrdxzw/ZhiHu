@@ -9,12 +9,8 @@ class EditNamePage extends React.PureComponent {
         super(props);
         this.save = this.save.bind(this);
         this.name = props.user.name;
-    }
-
-    componentDidMount(){
         this.props.navigation.setParams({save:this.save,name:this.props.user.name,newName:this.props.user.name})
     }
-
 
     save() { //保存修改，如果没有名字，则显示匿名
       this.props.editUserName(this.name.trim());

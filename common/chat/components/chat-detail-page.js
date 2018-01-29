@@ -45,6 +45,7 @@ class ChatPage extends React.Component {
     }
 
     componentWillMount() {
+        this._isMounted = true;
         this.props.navigation.setParams({receiver: this.chatUser})
     }
 
@@ -62,10 +63,12 @@ class ChatPage extends React.Component {
                     newMessage = {...newMessage, time: moment(created_at).format('lll')};
                 }
             }
-            this.setState((prevState,props)=>({
-                count:prevState.count + 1,
-                messages: [...prevState.messages, newMessage]
-            }));
+            if(this._isMounted) {
+                this.setState((prevState, props) => ({
+                    count: prevState.count + 1,
+                    messages: [...prevState.messages, newMessage]
+                }));
+            }
             this.props.read_special_message();
         }
     }
@@ -100,11 +103,12 @@ class ChatPage extends React.Component {
                 sendMessage = {...sendMessage, time: moment(created_at).format('lll')};
             }
         }
-        this.setState({
-            count: this.state.count + 1,
-            messages: [...this.state.messages, sendMessage]
-        });
-
+        if(this._isMounted) {
+            this.setState({
+                count: this.state.count + 1,
+                messages: [...this.state.messages, sendMessage]
+            });
+        }
         sendMyMessage(content, sender, this.chatUser._id)
             .then(() => {}).catch(err => {})
     }

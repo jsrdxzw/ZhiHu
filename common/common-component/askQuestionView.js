@@ -38,8 +38,6 @@ export default class AskQuestionView extends React.PureComponent {
                     cropping: true,
                     showCropGuidelines:true,
                     includeBase64:true,
-                    compressImageMaxWidth:width,
-                    compressImageMaxHeight:300,
                     mediaType:'phone',
                 }).then(image => {
                     if(index===0){
@@ -78,7 +76,7 @@ export default class AskQuestionView extends React.PureComponent {
                     <View style={styles.container}>
                         <View style={styles.headerContainer}>
                             <TouchableOpacity onPress={this.dismissModal}>
-                                <Icon name={'ios-close-outline'} size={32} style={{color: 'rgba(0, 0, 0, 0.65098)'}}/>
+                                <Icon name={'ios-close-outline'} size={36} style={{color: 'rgba(0, 0, 0, 0.65098)',paddingRight:15,paddingTop:2}}/>
                             </TouchableOpacity>
                             <Text style={{fontSize: 18}}>提问</Text>
                             <TouchableOpacity disabled={!this.state.questionTitle} onPress={this.submit}>

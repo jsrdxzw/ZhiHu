@@ -10,10 +10,7 @@ class EditGenderPage extends React.PureComponent {
         this.save = this.save.bind(this);
         this.state = {
             gender: props.user.gender
-        }
-    }
-
-    componentDidMount() {
+        };
         this.props.navigation.setParams({save: this.save})
     }
 

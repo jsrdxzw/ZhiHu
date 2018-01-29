@@ -4,28 +4,6 @@ import {connect} from 'react-redux';
 import {editUserDescription} from '../actions';
 
 class EditDescriptionPage extends React.PureComponent {
-
-    constructor(props) {
-        super(props);
-        this.save = this.save.bind(this);
-        this.description = props.user.description;
-    }
-
-    componentDidMount(){
-        this.props.navigation.setParams({save:this.save,description:this.props.user.description,newDescription:this.props.user.description})
-    }
-
-
-    save() { //保存修改，如果没有名字，则显示匿名
-        this.props.editUserDescription(this.description.trim());
-        this.props.navigation.goBack();
-    }
-
-    editDescription(description){ ///用户正在输入框修改名字
-        this.props.navigation.setParams({newDescription:description});
-        this.description = description;
-    }
-
     static navigationOptions = ({navigation}) => {
         const {params = {}} = navigation.state;
         return {
@@ -39,6 +17,22 @@ class EditDescriptionPage extends React.PureComponent {
                 </TouchableOpacity>
         }
     };
+    constructor(props) {
+        super(props);
+        this.save = this.save.bind(this);
+        this.description = props.user.description;
+        this.props.navigation.setParams({save:this.save,description:this.props.user.description,newDescription:this.props.user.description})
+    }
+
+    save() { //保存修改，如果没有名字，则显示匿名
+        this.props.editUserDescription(this.description.trim());
+        this.props.navigation.goBack();
+    }
+
+    editDescription(description){ ///用户正在输入框修改名字
+        this.props.navigation.setParams({newDescription:description});
+        this.description = description;
+    }
 
     render() {
         return (

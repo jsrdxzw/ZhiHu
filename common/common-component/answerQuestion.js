@@ -23,7 +23,7 @@ class AnswerQuestionModal extends React.PureComponent {
                     <View style={styles.container}>
                         <View style={styles.headerContainer}>
                             <TouchableOpacity onPress={switchModal}>
-                                <Icon name={'ios-close-outline'} size={32} style={{color: 'rgba(0, 0, 0, 0.65098)'}}/>
+                                <Icon name={'ios-close-outline'} size={32} style={{color: 'rgba(0, 0, 0, 0.65098)',paddingRight:15,paddingTop:2}}/>
                             </TouchableOpacity>
                             <Text style={{fontSize: 18}}>{question.title}</Text>
                             <TouchableOpacity disabled={!this.state.comment} onPress={this.submit}>

@@ -15,11 +15,9 @@ class EditSpecialityPage extends React.PureComponent {
         this.notSpecialists = specialists.filter(specialist=>!(this.specialists.indexOf(specialist)>-1));
         this.offset = this.specialists.length;
         this.mergeSpecialists = this.specialists.concat(this.notSpecialists);
-    }
-
-    componentDidMount() {
         this.props.navigation.setParams({save: this.save})
     }
+
 
     save() {
        this.props.editUserSpecialists(this.specialists);
