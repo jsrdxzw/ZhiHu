@@ -49,7 +49,7 @@ class ChatPage extends React.Component {
     }
 
     componentWillReceiveProps(nextProps){
-        if(nextProps.messages&&nextProps.messages.sender===this.chatUser._id){
+        if(nextProps.messages&&nextProps.messages!==this.props.messages&&nextProps.messages.sender===this.chatUser._id){
             this.loadingMore = false;
             let newMessage = nextProps.messages;
             const created_at = nextProps.messages.created_at;
@@ -91,7 +91,7 @@ class ChatPage extends React.Component {
         const sender = this.props.user._id;
         const created_at = new Date();
         const messages = this.state.messages;
-        let sendMessage = {content, sender: {_id: sender}, created_at};
+        let sendMessage = {content, sender: sender, created_at};
         if (messages.length) {
             const diff = moment(created_at).diff(moment(messages[messages.length - 1].created_at), 'minutes');
             if (diff >= 5 && diff < 60 * 24) {
@@ -179,6 +179,7 @@ const mapStateToProps = state => {
         messages:state.messages.messages
     }
 };
+
 const mapStateFromProps = dispatch=>{
     return{
         read_special_message:()=>dispatch(read_special_message()),

@@ -10,7 +10,7 @@ function startListener() {
     if (socket) {
         socket.on('receiver message', function(data){
             if(data){
-                Store.dispatch( actions.receive_message_intime(data))
+                Store.dispatch(actions.receive_message_intime(data))
             }
         });
     }

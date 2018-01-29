@@ -25,7 +25,7 @@ class ChatItem extends React.PureComponent {
     componentWillReceiveProps(nextProps) {
         if ((nextProps.messages.messages && !nextProps.messages.currentChatter) || (nextProps.messages.messages && nextProps.messages.currentChatter !== this.props.user._id)) {
 
-            if (nextProps.messages.messages.sender === this.props.user._id) {
+            if (nextProps.messages.messages.sender === this.props.user._id &&nextProps.messages.messages!==this.props.messages.messages) {
                 this.setState((prevState, props) => ({
                     unReadCount: prevState.unReadCount + 1
                 }));
