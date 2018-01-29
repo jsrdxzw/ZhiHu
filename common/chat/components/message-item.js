@@ -66,6 +66,7 @@ class MessageItem extends React.PureComponent {
     }
 
     ifYourself(message) {
+        console.log(message);
         return message.sender === this.props.user._id;
     }
 }

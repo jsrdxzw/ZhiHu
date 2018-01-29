@@ -43,7 +43,7 @@ class QuestionItem extends React.PureComponent {
     }
 
     questionHeader(question) {
-        if (question.authorID.email) {
+        if (question.authorID&&question.authorID.email) {
             return (
                 <View style={styles.headerContainer}>
                     <Image style={styles.avatarStyle}
@@ -62,7 +62,7 @@ class QuestionItem extends React.PureComponent {
     }
 
     getQuestionImage(question){
-        if(question.filenames){
+        if(question.filenames&&question.filenames.length){
             return <Image source={{uri:`${baseUrl}/uploads/${question.filenames[0]}`}} style={styles.questionImageStyle}/>
         } else {
             return null

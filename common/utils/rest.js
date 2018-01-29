@@ -499,9 +499,9 @@ export const setUserLocation = (longitude, latitude) => {
         longitude,
         latitude
     }).then(res => {
-        const {err, location} = res;
+        const {err} = res;
         if (!err) {
-            return Promise.resolve(location)
+            return Promise.resolve()
         } else {
             return Promise.reject('err')
         }
@@ -625,11 +625,11 @@ export const cancelAgreeAndDisagree = (comment_id,to_id,status)=>{
  */
 export const submitQuestion = (title,detail,noName,path)=>{
         const authorID = Store.getState().user._id;
-        if(!path) {
-            fetchUrl('/api/question/submitQst', 'post', {title, detail, authorID, noName}).then(res => {
-            })
-        } else {
+        if(path&&path.length) {
             uploadImage('/api/question/submitQstWithPic',title,detail,noName,authorID,path)
+        } else {
+            fetchUrl('/api/question/submitQst', 'post', {title, detail, authorID, noName}).then(res => {
+            }).catch(err=>{})
         }
 };
 

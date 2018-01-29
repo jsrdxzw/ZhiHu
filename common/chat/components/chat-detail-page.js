@@ -54,11 +54,13 @@ class ChatPage extends React.Component {
             let newMessage = nextProps.messages;
             const created_at = nextProps.messages.created_at;
             const messages = this.state.messages;
-            const diff = moment(created_at).diff(moment(messages[messages.length - 1].created_at), 'minutes');
-            if (diff >= 5 && diff < 60 * 24) {
-                newMessage = {...newMessage, time: moment(created_at).format('a h:mm')};
-            } else if (diff >= 60 * 24) {
-                newMessage = {...newMessage, time: moment(created_at).format('lll')};
+            if(messages.length) {
+                const diff = moment(created_at).diff(moment(messages[messages.length - 1].created_at), 'minutes');
+                if (diff >= 5 && diff < 60 * 24) {
+                    newMessage = {...newMessage, time: moment(created_at).format('a h:mm')};
+                } else if (diff >= 60 * 24) {
+                    newMessage = {...newMessage, time: moment(created_at).format('lll')};
+                }
             }
             this.setState((prevState,props)=>({
                 count:prevState.count + 1,

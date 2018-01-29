@@ -13,12 +13,11 @@ class ChatList extends React.Component {
         this.longitude = 0;
         this.latitude = 0;
         this.state = {
-            emptyMsg: '还没有任何消息',
+            emptyMsg: '还没有任何人在附近',
             loading: false,
             loadingMore: false,
             count: 0,
             chaters: [],
-            location: ''
         };
         this.refresh = this.refresh.bind(this);
         this.loadMore = this.loadMore.bind(this);
@@ -56,30 +55,30 @@ class ChatList extends React.Component {
     }
 
     getLocation(skipCount=0) {
-        navigator.geolocation.getCurrentPosition(location => {
-            const longitude = location.coords.longitude;
-            const latitude = location.coords.latitude;
-            this.longitude = longitude;
-            this.latitude = latitude;
-            setUserLocation(longitude, latitude)
-                .then((location) => {
-                    this.setState({
-                        location: location
-                    });
-                    return getNearUsers(longitude, latitude,skipCount);
-                })
-                .then(res=>{
-                    const {count,data} = res;
-                    this.setState({
-                        chaters:data,
-                        count:count
-                    });
-                    this.firstLoad = false;
-                })
-                .catch(err => {})
-        }, err => {
-            Toast.info('定位失败',1)
-        })
+        if(this.props.user&&this.props.user._id) {
+            navigator.geolocation.getCurrentPosition(location => {
+                const longitude = location.coords.longitude;
+                const latitude = location.coords.latitude;
+                this.longitude = longitude;
+                this.latitude = latitude;
+                setUserLocation(longitude, latitude)
+                    .then(() => {
+                        return getNearUsers(longitude, latitude, skipCount);
+                    })
+                    .then(res => {
+                        const {count, data} = res;
+                        this.setState({
+                            chaters: data,
+                            count: count
+                        });
+                        this.firstLoad = false;
+                    })
+                    .catch(err => {
+                    })
+            }, err => {
+                Toast.info('定位失败', 1)
+            })
+        }
     }
 
 
@@ -98,7 +97,7 @@ class ChatList extends React.Component {
                 }
                 ListHeaderComponent={
                     <View style={styles.listHeader}>
-                        <Text style={styles.headerText}>{this.state.location}</Text>
+                        <Text style={styles.headerText}>搜索5km以内，下拉刷新</Text>
                     </View>
                 }
                 ListFooterComponent={this.state.loadingMore ? (
@@ -117,7 +116,8 @@ class ChatList extends React.Component {
 
 const mapStateToProps = state=>{
     return{
-        messages:state.messages
+        messages:state.messages,
+        user:state.user
     }
 };
 
