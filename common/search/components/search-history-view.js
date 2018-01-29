@@ -19,6 +19,7 @@ export default class SearchHistoryList extends React.Component {
     }
 
     componentDidMount() {
+        this._isMounted = true;
         this.getHistory();
     }
 
@@ -28,7 +29,7 @@ export default class SearchHistoryList extends React.Component {
 
     getHistory() {
         getHistorySearch().then(historys => {
-            if (historys) {
+            if (historys && this._isMounted) {
                 this.setState({
                     historys: historys
                 })
@@ -37,7 +38,7 @@ export default class SearchHistoryList extends React.Component {
     }
 
     deleteItem(history) {
-        if (history) {
+        if (history && this._isMounted) {
             this.setState({
                 historys: this.state.historys.filter(his => his !== history)
             });
@@ -46,9 +47,11 @@ export default class SearchHistoryList extends React.Component {
     }
 
     deleteAll() {
-        this.setState({
-            historys: []
-        });
+        if(this._isMounted) {
+            this.setState({
+                historys: []
+            });
+        }
         deleteAllHistory();
     }
 
@@ -81,6 +84,12 @@ export default class SearchHistoryList extends React.Component {
             </View>
         )
     }
+
+
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
+
 }
 
 const HistoryItem = (props) => {

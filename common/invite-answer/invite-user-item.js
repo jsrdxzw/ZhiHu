@@ -17,6 +17,12 @@ class InviteUserItem extends React.PureComponent {
         this.props.navigation.navigate('otherUserPage',{user:this.props.user})
     }
 
+
+    componentDidMount() {
+        this._isMounted = true;
+    }
+
+
     /** 2018/1/13
      * author: XU ZHI WEI
      * function:邀请别人回答问题
@@ -25,9 +31,11 @@ class InviteUserItem extends React.PureComponent {
         const {question} = this.props.navigation.state.params;
         const to_user = this.props.user._id;
         inviteOther(question._id,to_user).then(()=>{
-              this.setState({
-                  isInvited:true
-              })
+             if(this._isMounted) {
+                 this.setState({
+                     isInvited: true
+                 })
+             }
         })
     }
 
@@ -55,6 +63,12 @@ class InviteUserItem extends React.PureComponent {
             </TouchableOpacity>
         )
     }
+
+
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
+
 }
 
 export default withNavigation(InviteUserItem)

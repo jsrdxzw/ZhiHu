@@ -20,6 +20,7 @@ export default class InviteList extends React.Component {
     }
 
     componentDidMount(){
+        this._isMounted = true;
         this.loadMore();
     }
 
@@ -27,12 +28,14 @@ export default class InviteList extends React.Component {
         if (this.props.keyword !== nextProps.keyword) {
             this.timer&&clearTimeout(this.timer);
             this.timer = setTimeout(()=>{
-                this.setState({
-                    loadingMore: false,
-                    users: [],
-                    count: 0
-                });
-                this.getSearchUser(nextProps.keyword);
+                if(this._isMounted) {
+                    this.setState({
+                        loadingMore: false,
+                        users: [],
+                        count: 0
+                    });
+                    this.getSearchUser(nextProps.keyword);
+                }
             },200);
         }
     }
@@ -40,11 +43,13 @@ export default class InviteList extends React.Component {
     refresh(){
         refreshRecommendUser(this.props.keyword).then(res=>{
             const {data,count} = res;
-            this.setState({
-                users: data,
-                count:count?count:this.state.count,
-                loading: false
-            })
+            if(this._isMounted) {
+                this.setState({
+                    users: data,
+                    count: count ? count : this.state.count,
+                    loading: false
+                })
+            }
         },err=>{
             this.setState({
                 loading: false
@@ -102,11 +107,13 @@ export default class InviteList extends React.Component {
     getSearchUser(keyword){
         getRecommendUser(keyword,this.state.users.length).then(res=>{
             const {count,data} = res;
-            this.setState({
-                users: [...this.state.users, ...data],
-                count: count,
-                loadingMore: false
-            });
+            if(this._isMounted) {
+                this.setState({
+                    users: [...this.state.users, ...data],
+                    count: count,
+                    loadingMore: false
+                });
+            }
             this.isLoading = false;
         },err=>{
             this.setState({
@@ -115,6 +122,12 @@ export default class InviteList extends React.Component {
             this.isLoading = false;
         })
     }
+
+
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
+
 }
 
 const styles = StyleSheet.create({

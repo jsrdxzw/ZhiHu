@@ -24,6 +24,7 @@ class ChatList extends React.Component {
     }
 
     componentDidMount() {
+        this._isMounted = true;
         this.getLocation()
     }
 
@@ -37,18 +38,22 @@ class ChatList extends React.Component {
 
     getMoreChatUsers() {
         if(!this.firstLoad && this.state.count > this.state.chaters.length && !this.isLoading){
-            this.setState({
-                loadingMore: true
-            });
+            if(this._isMounted) {
+                this.setState({
+                    loadingMore: true
+                });
+            }
             this.firstLoad = false;
             this.isLoading = true; //上锁
             getNearUsers(this.longitude, this.latitude,this.state.chaters.length)
                 .then(res=>{
                     const {count,data} = res;
-                    this.setState({
-                        chaters:data,
-                        count:count
-                    });
+                    if(this._isMounted) {
+                        this.setState({
+                            chaters: data,
+                            count: count
+                        });
+                    }
                     this.isLoading = false;
                 }).catch(err=>{this.isLoading = false})
         }
@@ -67,10 +72,12 @@ class ChatList extends React.Component {
                     })
                     .then(res => {
                         const {count, data} = res;
-                        this.setState({
-                            chaters: data,
-                            count: count
-                        });
+                        if(this._isMounted) {
+                            this.setState({
+                                chaters: data,
+                                count: count
+                            });
+                        }
                         this.firstLoad = false;
                     })
                     .catch(err => {
@@ -110,6 +117,7 @@ class ChatList extends React.Component {
     }
 
     componentWillUnmount(){
+        this._isMounted = false;
         Toast.hide()
     }
 }

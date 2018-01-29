@@ -16,16 +16,24 @@ export default class SearchViewModal extends React.Component {
         this.selectItem = this.selectItem.bind(this);
     }
 
+
+    componentDidMount() {
+        this._isMounted = true;
+    }
+
+
     changeText(text) {
-        if(!text.trim()){
-            this.setState({
-                historyView:true,
-                searchContent:''
-            })
-        } else {
-            this.setState({
-                searchContent:text.trim()
-            })
+        if(this._isMounted) {
+            if (!text.trim()) {
+                this.setState({
+                    historyView: true,
+                    searchContent: ''
+                })
+            } else {
+                this.setState({
+                    searchContent: text.trim()
+                })
+            }
         }
     }
 
@@ -43,17 +51,21 @@ export default class SearchViewModal extends React.Component {
     startSearch() {
         if (this.state.searchContent) {
             storeHistorySearch(this.state.searchContent);
-            this.setState({
-                historyView:false
-            })
+            if(this._isMounted) {
+                this.setState({
+                    historyView: false
+                })
+            }
         }
     }
 
     selectItem(history){
-       this.setState({
-           searchContent:history,
-           historyView:false
-       });
+        if(this._isMounted) {
+            this.setState({
+                searchContent: history,
+                historyView: false
+            });
+        }
     }
 
     render() {
@@ -86,6 +98,12 @@ export default class SearchViewModal extends React.Component {
             </Modal>
         )
     }
+
+
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
+
 
 }
 

@@ -22,37 +22,42 @@ export default class InviteNotification extends React.Component {
     }
 
     componentDidMount(){
+        this._isMounted = true;
         this.loadMore();
     }
 
     refresh(){
-        refreshNotification(this.props.type).then(res=>{
-            const {data,count} = res;
-            this.setState({
-                notifications: data,
-                count:count?count:this.state.count,
-                loading: false
+        if(this._isMounted) {
+            refreshNotification(this.props.type).then(res => {
+                const {data, count} = res;
+                this.setState({
+                    notifications: data,
+                    count: count ? count : this.state.count,
+                    loading: false
+                })
+            }, err => {
+                this.setState({
+                    loading: false
+                })
             })
-        },err=>{
-            this.setState({
-                loading: false
-            })
-        })
+        }
     }
 
     loadMore(){
-        if (this.firstLoad) { //表示初次加载
-            this.setState({
-                loadingMore:true
-            });
-            this.firstLoad = false;
-            this.getNotifications();
-        } else if (this.state.count > this.state.notifications.length && !this.isLoading) {
-            this.setState({
-                loadingMore:true
-            });
-            this.isLoading = true;
-            this.getNotifications();
+        if(this._isMounted) {
+            if (this.firstLoad) { //表示初次加载
+                this.setState({
+                    loadingMore: true
+                });
+                this.firstLoad = false;
+                this.getNotifications();
+            } else if (this.state.count > this.state.notifications.length && !this.isLoading) {
+                this.setState({
+                    loadingMore: true
+                });
+                this.isLoading = true;
+                this.getNotifications();
+            }
         }
     }
 
@@ -68,10 +73,12 @@ export default class InviteNotification extends React.Component {
 
     deleteAllNotification(){
         deleteAllNotification(this.props.type).then(()=>{
-            this.setState({
-                notifications: [],
-                count:0
-            });
+            if(this._isMounted) {
+                this.setState({
+                    notifications: [],
+                    count: 0
+                });
+            }
         })
     }
 
@@ -108,11 +115,13 @@ export default class InviteNotification extends React.Component {
     getNotifications(){
         getNotification(this.props.type,this.state.notifications.length).then(res=>{
             const {count,data} = res;
-            this.setState({
-                notifications: [...this.state.notifications, ...data],
-                count: count,
-                loadingMore: false
-            });
+            if(this._isMounted) {
+                this.setState({
+                    notifications: [...this.state.notifications, ...data],
+                    count: count,
+                    loadingMore: false
+                });
+            }
             this.isLoading = false;
         },err=>{
             this.setState({
@@ -120,6 +129,10 @@ export default class InviteNotification extends React.Component {
             });
             this.isLoading = false;
         })
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
 

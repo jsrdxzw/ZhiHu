@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, TouchableOpacity, Text, StyleSheet, Animated,Easing} from 'react-native';
+import {TouchableOpacity, Text, StyleSheet, Animated} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 //关注问题按钮。包括已经关注

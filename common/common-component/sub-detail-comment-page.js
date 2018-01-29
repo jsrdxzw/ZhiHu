@@ -37,6 +37,7 @@ export default class SubDetailCommentPage extends React.Component {
     }
 
     componentDidMount() {
+        this._isMounted = true;
         this.loadMore();
     }
 
@@ -61,16 +62,20 @@ export default class SubDetailCommentPage extends React.Component {
         const {comment} = this.props.navigation.state.params;
         refreshSubComments(comment._id).then(res => {
             const {data, count} = res;
-            this.setState({
-                subComments: data,
-                count: count ? count : this.state.count,
-                loading: false,
-                text: ''
-            })
+            if(this._isMounted) {
+                this.setState({
+                    subComments: data,
+                    count: count ? count : this.state.count,
+                    loading: false,
+                    text: ''
+                })
+            }
         }, err => {
-            this.setState({
-                loading: false
-            })
+            if(this._isMounted) {
+                this.setState({
+                    loading: false
+                })
+            }
         })
     }
 
@@ -95,16 +100,20 @@ export default class SubDetailCommentPage extends React.Component {
         getSubComments(comment._id, this.state.subComments.length)
             .then(res => {
                 const {count, data} = res;
-                this.setState({
-                    subComments: [...this.state.subComments, ...data],
-                    count: count,
-                    loadingMore: false
-                });
+                if(this._isMounted) {
+                    this.setState({
+                        subComments: [...this.state.subComments, ...data],
+                        count: count,
+                        loadingMore: false
+                    });
+                }
                 this.isLoading = false;
             }, err => {
-                this.setState({
-                    loadingMore: false
-                });
+                if(this._isMounted) {
+                    this.setState({
+                        loadingMore: false
+                    });
+                }
                 this.isLoading = false;
             })
     }
@@ -167,6 +176,12 @@ export default class SubDetailCommentPage extends React.Component {
             </View>
         )
     }
+
+
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
+
 }
 
 const styles = StyleSheet.create({

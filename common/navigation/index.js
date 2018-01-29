@@ -39,7 +39,7 @@ const tabNavigator = TabNavigator({
     swipeEnabled: false, //can swipe
     animationEnabled:false,
     tabBarOptions: {
-        activeTintColor: '#1890ff'
+        activeTintColor: '#08979c'
     }
 });
 

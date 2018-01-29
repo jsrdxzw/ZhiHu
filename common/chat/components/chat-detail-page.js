@@ -45,7 +45,6 @@ class ChatPage extends React.Component {
     }
 
     componentWillMount() {
-        this._isMounted = true;
         this.props.navigation.setParams({receiver: this.chatUser})
     }
 
@@ -76,6 +75,7 @@ class ChatPage extends React.Component {
 
     componentDidMount() {
         this.loadingMore = false;
+        this._isMounted = true;
         this.props.set_current_chater(this.chatUser._id);
         this.loadMoreMessage();
     }
@@ -135,15 +135,19 @@ class ChatPage extends React.Component {
         if (count > loadLength || loadLength === 0) {
             getMyHistoryMessage(sender, receiver, loadLength)
                 .then(({count, data}) => {
-                    this.setState({
-                        count,
-                        messages: [...data, ...this.state.messages],
-                        loading: false
-                    });
+                    if(this._isMounted) {
+                        this.setState({
+                            count,
+                            messages: [...data, ...this.state.messages],
+                            loading: false
+                        });
+                    }
                 }).catch(err => {
-                this.setState({
-                    loading: false
-                });
+                    if(this._isMounted) {
+                        this.setState({
+                            loading: false
+                        });
+                    }
             })
         }
     }
@@ -173,6 +177,7 @@ class ChatPage extends React.Component {
 
     componentWillUnmount(){
           this.props.clear_chatter();
+          this._isMounted = false
     }
 
 }

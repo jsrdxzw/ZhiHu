@@ -24,11 +24,14 @@ export default class CollectionQuestionList extends React.Component {
     }
 
     componentDidMount() {
+        this._isMounted = true;
         getCollections().then(collections => {
             if (collections) {
-                this.setState({
-                    collections: collections,
-                })
+                if(this._isMounted) {
+                    this.setState({
+                        collections: collections,
+                    })
+                }
             }
         }).catch(err => {
         })
@@ -37,9 +40,11 @@ export default class CollectionQuestionList extends React.Component {
     deleteCollection(id) {
         deleteCollections(id)
             .then(() => {
-                this.setState({
-                    collections: this.state.collections.filter(collection => collection._id !== id)
-                })
+                if(this._isMounted) {
+                    this.setState({
+                        collections: this.state.collections.filter(collection => collection._id !== id)
+                    })
+                }
             })
     }
 
@@ -104,9 +109,11 @@ export default class CollectionQuestionList extends React.Component {
     }
 
     switchModal() {
-        this.setState({
-            askViewVisible: !this.state.askViewVisible
-        })
+        if(this._isMounted) {
+            this.setState({
+                askViewVisible: !this.state.askViewVisible
+            })
+        }
     }
 
     /** 2018/1/5
@@ -116,10 +123,12 @@ export default class CollectionQuestionList extends React.Component {
     refresh() {
         getCollections().then(collections => {
             if (collections) {
-                this.setState({
-                    collections: collections,
-                    loading: false
-                })
+                if(this._isMounted) {
+                    this.setState({
+                        collections: collections,
+                        loading: false
+                    })
+                }
             }
         }).catch(err => {
             this.setState({
@@ -127,6 +136,12 @@ export default class CollectionQuestionList extends React.Component {
             })
         })
     }
+
+
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
+
 }
 
 const styles = StyleSheet.create({

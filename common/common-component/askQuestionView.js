@@ -24,6 +24,11 @@ export default class AskQuestionView extends React.PureComponent {
         this.dismissModal = this.dismissModal.bind(this);
     }
 
+
+    componentDidMount() {
+        this._isMounted = true;
+    }
+
     showActionSheet(index=0){
         const BUTTONS = ['从相册选择', '取消'];
         ActionSheet.showActionSheetWithOptions({
@@ -41,14 +46,18 @@ export default class AskQuestionView extends React.PureComponent {
                     mediaType:'phone',
                 }).then(image => {
                     if(index===0){
-                        this.setState({
-                            picture1:image.data
-                        });
+                        if(this._isMounted) {
+                            this.setState({
+                                picture1: image.data
+                            });
+                        }
                         image.path&&(this.path[0] = image.path);
                     } else {
-                        this.setState({
-                            picture2:image.data
-                        });
+                        if(this._isMounted) {
+                            this.setState({
+                                picture2: image.data
+                            });
+                        }
                         image.path&&(this.path[1] = image.path);
                     }
                 },cancel=>{});
@@ -59,10 +68,12 @@ export default class AskQuestionView extends React.PureComponent {
     dismissModal(){
         if(this.state.picture) {
             this.path='';
-            this.setState({
-                picture1: '',
-                picture2:''
-            });
+            if(this._isMounted) {
+                this.setState({
+                    picture1: '',
+                    picture2: ''
+                });
+            }
         }
         this.props.switchModal();
     }
@@ -148,9 +159,11 @@ export default class AskQuestionView extends React.PureComponent {
      * function:问题标题
      */
     editQuestion(question) {
-        this.setState({
-            questionTitle: question.trim()
-        })
+        if(this._isMounted) {
+            this.setState({
+                questionTitle: question.trim()
+            })
+        }
     }
 
     /** 2017/12/30
@@ -158,9 +171,11 @@ export default class AskQuestionView extends React.PureComponent {
      * function:问题描述
      */
     editQuestionDetail(question) {
-        this.setState({
-            questionDetail: question.trim()
-        })
+        if(this._isMounted) {
+            this.setState({
+                questionDetail: question.trim()
+            })
+        }
     }
 
 
@@ -186,10 +201,12 @@ export default class AskQuestionView extends React.PureComponent {
         const title = /^.*[？?]$/.test(this.state.questionTitle) ? this.state.questionTitle : this.state.questionTitle + '?';
         submitQuestion(title, this.state.questionDetail, this.state.switchValue,this.path);
         this.props.switchModal();
-        this.setState({
-            picture1:'',
-            picture2:'',
-        })
+        if(this._isMounted) {
+            this.setState({
+                picture1: '',
+                picture2: '',
+            })
+        }
     }
 
     getImageView(picture){
@@ -206,6 +223,12 @@ export default class AskQuestionView extends React.PureComponent {
             return null
         }
     }
+
+
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
+
 
 }
 

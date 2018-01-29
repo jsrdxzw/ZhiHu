@@ -19,21 +19,26 @@ export default class GuanZhuComponent extends React.Component {
     }
 
     componentDidMount(){
+        this._isMounted = true;
         this.loadMore();
     }
 
     refresh(){
         refreshConcernQuestion().then(res=>{
             const {data,count} = res;
-            this.setState({
-                questions: data,
-                count:count?count:this.state.count,
-                loading: false
-            })
+            if(this._isMounted) {
+                this.setState({
+                    questions: data,
+                    count: count ? count : this.state.count,
+                    loading: false
+                })
+            }
         },err=>{
-            this.setState({
-                loading: false
-            })
+            if(this._isMounted) {
+                this.setState({
+                    loading: false
+                })
+            }
         })
     }
 
@@ -86,11 +91,13 @@ export default class GuanZhuComponent extends React.Component {
     getLastQuestion(){
         getConcernQuestion(this.state.questions.length).then(res=>{
             const {count,data} = res;
-            this.setState({
-                questions: [...this.state.questions, ...data],
-                count: count,
-                loadingMore: false
-            });
+            if(this._isMounted) {
+                this.setState({
+                    questions: [...this.state.questions, ...data],
+                    count: count,
+                    loadingMore: false
+                });
+            }
             this.isLoading = false;
         },err=>{
             this.setState({
@@ -99,6 +106,12 @@ export default class GuanZhuComponent extends React.Component {
             this.isLoading = false;
         })
     }
+
+
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
+
 }
 
 const styles = StyleSheet.create({

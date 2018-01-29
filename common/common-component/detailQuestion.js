@@ -50,17 +50,22 @@ class DetailQuestion extends React.PureComponent {
 
     componentDidMount() {
         const {params} = this.props.navigation.state;
+        this._isMounted = true;
         this.loadMore(); //初次加载
         ifConcernQuestion(params.question._id)
             .then(res => {
                 if (res) { //表示已经关注
-                    this.setState({
-                        concern: true
-                    })
+                    if(this._isMounted) {
+                        this.setState({
+                            concern: true
+                        })
+                    }
                 } else { //表示未关注
-                    this.setState({
-                        concern: false
-                    })
+                    if(this._isMounted) {
+                        this.setState({
+                            concern: false
+                        })
+                    }
                 }
             })
     }
@@ -178,9 +183,11 @@ class DetailQuestion extends React.PureComponent {
     }
 
     switchModal() {
-        this.setState({
-            visible: !this.state.visible
-        })
+        if(this._isMounted) {
+            this.setState({
+                visible: !this.state.visible
+            })
+        }
     }
 
     /** 2018/1/5
@@ -204,15 +211,19 @@ class DetailQuestion extends React.PureComponent {
                     {...comment, from_now: moment(comment.created_at).fromNow()}
                 ));
                 if (!err) {
-                    this.setState({
-                        comments: newData,
-                        count: count ? count : this.state.count,
-                        loading: false
-                    })
+                    if(this._isMounted) {
+                        this.setState({
+                            comments: newData,
+                            count: count ? count : this.state.count,
+                            loading: false
+                        })
+                    }
                 } else {
-                    this.setState({
-                        loading: false
-                    })
+                    if(this._isMounted) {
+                        this.setState({
+                            loading: false
+                        })
+                    }
                 }
             });
     }
@@ -242,15 +253,19 @@ class DetailQuestion extends React.PureComponent {
                     {...comment, from_now: moment(comment.created_at).fromNow()}
                 ));
                 if (!err && data.length) {
-                    this.setState({
-                        comments: [...this.state.comments, ...newData],
-                        count: count,
-                        loadingMore: false
-                    })
+                    if(this._isMounted) {
+                        this.setState({
+                            comments: [...this.state.comments, ...newData],
+                            count: count,
+                            loadingMore: false
+                        })
+                    }
                 } else {
-                    this.setState({
-                        loadingMore: false
-                    })
+                    if(this._isMounted) {
+                        this.setState({
+                            loadingMore: false
+                        })
+                    }
                 }
                 this.isLoading = false
             })
@@ -259,30 +274,36 @@ class DetailQuestion extends React.PureComponent {
     concern() { //关注问题
         const {params} = this.props.navigation.state;
         concernQuestion(params.question._id).then(() => {
-            this.setState({
-                concern: true
-            })
+            if(this._isMounted) {
+                this.setState({
+                    concern: true
+                })
+            }
         })
     }
 
     cancelConcern() { //取消关注问题
         const {params} = this.props.navigation.state;
         cancelConcernQuestion(params.question._id).then(() => {
-            this.setState({
-                concern: false
-            })
+            if(this._isMounted) {
+                this.setState({
+                    concern: false
+                })
+            }
         })
     }
 
     newComment(comment) {
-        this.setState({
-            comments: [{
-                ...comment,
-                from_now: moment(comment.created_at).fromNow(),
-                authorId: comment.noName ? this.props.user._id : this.props.user
-            }, ...this.state.comments],
-            count: this.state.count + 1
-        })
+        if(this._isMounted) {
+            this.setState({
+                comments: [{
+                    ...comment,
+                    from_now: moment(comment.created_at).fromNow(),
+                    authorId: comment.noName ? this.props.user._id : this.props.user
+                }, ...this.state.comments],
+                count: this.state.count + 1
+            })
+        }
     }
 
     getPicturesView(filenames) {
@@ -295,6 +316,12 @@ class DetailQuestion extends React.PureComponent {
             return null
         }
     }
+
+
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
+
 }
 
 const styles = StyleSheet.create({

@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, TextInput,TouchableOpacity,Keyboard} from 'react-native';
+import {View, StyleSheet, TextInput,TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 
@@ -15,8 +15,8 @@ export default class ChatFooter extends React.Component {
         this._keyboardDidShow = this._keyboardDidShow.bind(this);
     }
 
-    componentWillMount () {
-        this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
+    componentDidMount(){
+        this._isMounted = true;
     }
 
     _keyboardDidShow () {
@@ -25,16 +25,20 @@ export default class ChatFooter extends React.Component {
 
 
     changeText(text){
-        this.setState({
-            text
-        })
+        if(this._isMounted) {
+            this.setState({
+                text
+            })
+        }
     }
 
     sendMessage(){
         this.props.sendMessage(this.state.text.trim());
-        this.setState({
-            text:''
-        });
+        if(this._isMounted) {
+            this.setState({
+                text: ''
+            });
+        }
     }
 
     render() {
@@ -59,7 +63,7 @@ export default class ChatFooter extends React.Component {
     }
 
     componentWillUnmount () {
-        this.keyboardDidShowListener.remove();
+        this._isMounted = false;
     }
 }
 

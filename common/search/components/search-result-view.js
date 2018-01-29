@@ -21,17 +21,20 @@ export default class SearchResultView extends React.Component {
         if (this.props.keyword !== nextProps.keyword) {
             this.timer&&clearTimeout(this.timer);
             this.timer = setTimeout(()=>{
-                this.setState({
-                    loadingMore: false,
-                    questions: [],
-                    count: 0
-                });
+                if(this._isMounted) {
+                    this.setState({
+                        loadingMore: false,
+                        questions: [],
+                        count: 0
+                    });
+                }
                 this.getsearchQuestion(nextProps.keyword);
             },100);
         }
     }
 
     componentDidMount() {
+        this._isMounted = true;
         this.loadMore();
     }
 
@@ -83,11 +86,13 @@ export default class SearchResultView extends React.Component {
     getsearchQuestion(keyword) {
             getSearchQuestion(keyword, this.state.questions.length).then(res => {
                 const {count, data} = res;
-                this.setState({
-                    questions: [...this.state.questions, ...data],
-                    count: count,
-                    loadingMore: false
-                });
+                if(this._isMounted) {
+                    this.setState({
+                        questions: [...this.state.questions, ...data],
+                        count: count,
+                        loadingMore: false
+                    });
+                }
                 this.isLoading = false;
             }, err => {
                 this.setState({
@@ -98,6 +103,7 @@ export default class SearchResultView extends React.Component {
     }
 
     componentWillUnmount(){
+        this._isMounted = false;
         this.timer&&clearTimeout(this.timer);
     }
 }

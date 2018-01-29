@@ -15,6 +15,12 @@ class AnswerQuestionModal extends React.PureComponent {
         this.submit = this.submit.bind(this);
     }
 
+
+    componentDidMount() {
+        this._isMounted = true;
+    }
+
+
     render() {
         const {visible, switchModal, question} = this.props;
         return (
@@ -67,9 +73,11 @@ class AnswerQuestionModal extends React.PureComponent {
      * function:问题标题
      */
     editQuestion(comment) {
-        this.setState({
-            comment: comment.trim()
-        })
+        if(this._isMounted) {
+            this.setState({
+                comment: comment.trim()
+            })
+        }
     }
 
     /** 2017/12/30
@@ -77,9 +85,11 @@ class AnswerQuestionModal extends React.PureComponent {
      * function:用户是否匿名回答
      */
     switchNoName(value) {
-        this.setState({
-            switchValue: value
-        });
+        if(this._isMounted) {
+            this.setState({
+                switchValue: value
+            });
+        }
         if (value) { //用户想匿名
             Alert.alert('启用匿名后', '提问，回答，赞同，关注会显示为匿名，且不能邀请别人回答问题',
                 [
@@ -111,6 +121,11 @@ class AnswerQuestionModal extends React.PureComponent {
                     this.props.successSubmit(data)
                 }
             })
+    }
+
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
 

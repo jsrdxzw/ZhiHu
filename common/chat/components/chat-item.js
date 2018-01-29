@@ -13,11 +13,17 @@ class ChatItem extends React.PureComponent {
         this.gotoDetailChatView = this.gotoDetailChatView.bind(this);
     }
 
+    componentDidMount(){
+        this._isMounted = true;
+    }
+
     gotoDetailChatView() {
         if(this.state.unReadCount){
-            this.setState({
-                unReadCount:0
-            });
+            if(this._isMounted) {
+                this.setState({
+                    unReadCount: 0
+                });
+            }
         }
         this.props.navigation.navigate('ChatDetailPage', {receiver: this.props.user})
     }
@@ -26,9 +32,11 @@ class ChatItem extends React.PureComponent {
         if ((nextProps.messages.messages && !nextProps.messages.currentChatter) || (nextProps.messages.messages && nextProps.messages.currentChatter !== this.props.user._id)) {
 
             if (nextProps.messages.messages.sender === this.props.user._id &&nextProps.messages.messages!==this.props.messages.messages) {
-                this.setState((prevState, props) => ({
-                    unReadCount: prevState.unReadCount + 1
-                }));
+                if(this._isMounted) {
+                    this.setState((prevState, props) => ({
+                        unReadCount: prevState.unReadCount + 1
+                    }));
+                }
             }
         }
     }
@@ -57,6 +65,9 @@ class ChatItem extends React.PureComponent {
                 </View>
             </TouchableOpacity>
         )
+    }
+    componentWillUnmount(){
+        this._isMounted = false
     }
 }
 

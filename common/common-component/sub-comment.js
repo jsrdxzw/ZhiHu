@@ -27,16 +27,21 @@ class SubComment extends React.Component {
 
     componentDidMount() {
         const {params} = this.props.navigation.state;
+        this._isMounted = true;
         this.props.navigation.setParams({title: params.title});
         checkZanStatus(params.comment._id, params.comment.authorId._id)
             .then(res => {
-                this.setState({
-                    agreeStatus: res
-                })
+                if(this._isMounted) {
+                    this.setState({
+                        agreeStatus: res
+                    })
+                }
             }).catch(err => {
-            this.setState({
-                agreeStatus: 'init' //表示既没有赞成也没有反对
-            })
+                if(this._isMounted) {
+                    this.setState({
+                        agreeStatus: 'init' //表示既没有赞成也没有反对
+                    })
+                }
         })
     }
 
@@ -55,9 +60,11 @@ class SubComment extends React.Component {
 
     switchFooterView() {
         if (this.props.login) {
-            this.setState((prevState, props) => ({
-                showAgreeView: !prevState.showAgreeView
-            }))
+            if(this._isMounted) {
+                this.setState((prevState, props) => ({
+                    showAgreeView: !prevState.showAgreeView
+                }))
+            }
         } else {
             Toast.info('先にログインしてください', 1);
         }
@@ -69,9 +76,11 @@ class SubComment extends React.Component {
         agreeDisagreeComment(comment._id, comment.authorId._id, 1)
             .then(() => {
                 this.switchFooterView();
-                this.setState({
-                    agreeStatus: 1
-                })
+                if(this._isMounted) {
+                    this.setState({
+                        agreeStatus: 1
+                    })
+                }
             }, err => this.switchFooterView())
     }
 
@@ -81,9 +90,11 @@ class SubComment extends React.Component {
         agreeDisagreeComment(comment._id, comment.authorId._id, 0)
             .then(() => {
                 this.switchFooterView();
-                this.setState({
-                    agreeStatus: 0
-                })
+                if(this._isMounted) {
+                    this.setState({
+                        agreeStatus: 0
+                    })
+                }
             }, err => this.switchFooterView())
     }
 
@@ -119,10 +130,12 @@ class SubComment extends React.Component {
         const {comment} = this.props.navigation.state.params;
         cancelAgreeAndDisagree(comment._id, comment.authorId._id, status)
             .then((msg) => {
-                this.setState({
-                    agreeStatus: 'init',
-                    clickDisabled: false
-                });
+                if(this._isMounted) {
+                    this.setState({
+                        agreeStatus: 'init',
+                        clickDisabled: false
+                    });
+                }
                 Toast.info(msg, 1);
             }, err => Toast.info(err, 1))
     }
@@ -250,6 +263,12 @@ class SubComment extends React.Component {
         }
 
     }
+
+
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
+
 }
 
 const mapStateToProps = state => {
