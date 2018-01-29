@@ -6,13 +6,18 @@
 
 const initState = {
     messages:null,
-    currentChatter:null
+    currentChatter:null,
+    unReadCount:0
 };
 
 const reducer = (state=initState,action)=>{
     switch (action.type){
         case 'RECEIVE_MESSAGE_INTIME':
+            return {...state,messages:action.payload,unReadCount:state.unReadCount+1};
+        case 'RECEIVE_MESSAGE_INTIME_NOUNREAD':
             return {...state,messages:action.payload};
+        case 'CLEAR_UNREAD':
+            return {...state,unReadCount:0};
         case 'READ_SPECIAL_MESSAGE':
             return {...state,messages:null};
         case 'SET_CHATTER':

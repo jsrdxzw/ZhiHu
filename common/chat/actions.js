@@ -1,5 +1,6 @@
 import {sendMyMessage, getMyHistoryMessage} from '../utils/rest';
 import moment from 'moment';
+import Store from '../Store';
 
 const SEND_MESSAGE = 'SEND_MESSAGE';
 const GET_HISTORY_MESSAGE = 'GET_HISTORY_MESSAGE';
@@ -8,6 +9,8 @@ const RECEIVE_MESSAGE_INTIME = 'RECEIVE_MESSAGE_INTIME';
 const READ_SPECIAL_MESSAGE = 'READ_SPECIAL_MESSAGE';
 const SET_CHATTER = 'SET_CHATTER';
 const CLEAR_CHATTER = 'CLEAR_CHATTER';
+const RECEIVE_MESSAGE_INTIME_NOUNREAD = 'RECEIVE_MESSAGE_INTIME_NOUNREAD';
+const CLEAR_UNREAD = 'CLEAR_UNREAD';
 
 function send_message(sendMessage) {
     return {
@@ -31,9 +34,22 @@ function get_history_message(count, data) {
 }
 
 export function receive_message_intime(data) {
+    if(Store.getState().common.tabIndex===1){
+        return {
+            type: RECEIVE_MESSAGE_INTIME_NOUNREAD,
+            payload: data
+        }
+    } else {
+        return {
+            type: RECEIVE_MESSAGE_INTIME,
+            payload: data
+        }
+    }
+}
+
+export function clear_unread(){
     return {
-        type:RECEIVE_MESSAGE_INTIME,
-        payload:data
+        type:CLEAR_UNREAD
     }
 }
 
@@ -55,7 +71,6 @@ export function clear_chatter() {
         type:CLEAR_CHATTER
     }
 }
-
 
 export const sendMessage = (content, receiver) => {
     return (dispatch, getState) => {

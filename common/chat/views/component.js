@@ -1,9 +1,24 @@
 import React from 'react';
 import {View,StyleSheet,Text} from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
 import ChatList from "../components/chat-user-list";
+import ChatIcon from '../components/chatIcon';
 
 export default class Chat extends React.Component{
+
+    constructor(props) {
+        super(props);
+        this.set_tab_index = this.set_tab_index.bind(this);
+        this.clearUnread = this.clearUnread.bind(this);
+        this.props.navigation.setParams({set_tab_index:this.set_tab_index,clearUnread:this.clearUnread});
+    }
+
+    set_tab_index(index){
+        this.props.setTabIndex(index);
+    }
+
+    clearUnread(){
+        this.props.clearUnread()
+    }
 
     static navigationOptions = ({navigation})=>{
         const {params = {}} = navigation.state;
@@ -13,10 +28,28 @@ export default class Chat extends React.Component{
             title: 'メッセージ',
             tabBarLabel: 'メッセージ',
             tabBarIcon: ({tintColor}) => (
-                <Icon name={'md-chatboxes'} size={24} style={{color: tintColor}}/>
-            )
+                <ChatIcon tintColor={tintColor}/>
+            ),
+            tabBarOnPress:(routeParams)=>{
+                params.set_tab_index(routeParams.scene.index);
+                params.clearUnread();
+                routeParams.jumpToIndex(1)
+            }
         }
     };
+
+    componentWillReceiveProps(nextProps) {
+        if ((nextProps.messages && !nextProps.currentChatter) || (nextProps.messages && nextProps.currentChatter !== this.props.user._id)) {
+
+            if (nextProps.messages.sender === this.props.user._id &&nextProps.messages!==this.props.messages) {
+                if(this._isMounted) {
+                    this.setState((prevState, props) => ({
+                        unReadCount: prevState.unReadCount + 1
+                    }));
+                }
+            }
+        }
+    }
 
     render(){
         const {user} = this.props;
@@ -31,6 +64,8 @@ export default class Chat extends React.Component{
         )
     }
 }
+
+
 
 const styles = StyleSheet.create({
     container:{

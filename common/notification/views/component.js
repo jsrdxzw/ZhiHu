@@ -26,9 +26,24 @@ export default class Notification extends React.Component {
             tabBarLabel: '知らせ',
             tabBarIcon: ({tintColor}) => (
                 <Icon name={'ios-notifications'} size={24} style={{color: tintColor}}/>
-            )
+            ),
+            tabBarOnPress:(routeParams)=>{
+                params.set_tab_index(routeParams.scene.index);
+                routeParams.jumpToIndex(2)
+            },
         }
     };
+
+    constructor(props) {
+        super(props);
+        this.set_tab_index = this.set_tab_index.bind(this);
+        this.props.navigation.setParams({set_tab_index:this.set_tab_index})
+    }
+
+    set_tab_index(index){
+        this.props.setTabIndex(index)
+    }
+
 
     render() {
         const {user} = this.props;

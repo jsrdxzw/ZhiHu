@@ -27,12 +27,20 @@ export default class HomePage extends React.Component {
             tabBarIcon: ({tintColor}) => (
                 <Icon name={'ios-home'} size={24} style={{color: tintColor}}/>
             ),
+            tabBarOnPress:(routeParams)=>{
+                params.set_tab_index(routeParams.scene.index);
+                routeParams.jumpToIndex(0)
+            },
             headerRight: <TouchableOpacity onPress={params.createQuestion}><Icon name={'ios-create-outline'} size={28}
                                                  style={{color: '#1890ff', marginRight: 20}}/></TouchableOpacity>,
             headerLeft: <TouchableOpacity onPress={params.switchSearchModal}><Icon name={'ios-search-outline'} size={28}
                                                 style={{color: '#1890ff', marginLeft: 20}}/></TouchableOpacity>
         }
     };
+
+    set_tab_index(index){
+        this.props.setTabIndex(index);
+    }
 
     constructor(props){
         super(props);
@@ -47,7 +55,8 @@ export default class HomePage extends React.Component {
         this.switchAskModal = this.switchAskModal.bind(this);
         this.switchSearchModal = this.switchSearchModal.bind(this);
         this.startLogin = this.startLogin.bind(this);
-        this.props.navigation.setParams({createQuestion:this.createQuestion,switchSearchModal:this.switchSearchModal})
+        this.set_tab_index = this.set_tab_index.bind(this);
+        this.props.navigation.setParams({createQuestion:this.createQuestion,switchSearchModal:this.switchSearchModal,set_tab_index:this.set_tab_index})
     }
 
     /** 2017/12/28
@@ -132,7 +141,10 @@ export default class HomePage extends React.Component {
     tabOnChange(tab,index){
 
     }
+
 }
+
+
 
 const styles = StyleSheet.create({
     container:{

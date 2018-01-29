@@ -11,14 +11,21 @@ const width = Dimensions.get('window').width;
 
 export default class UserCenter extends React.Component {
 
-    static navigationOptions = {
-        headerTintColor: 'rgba(0, 0, 0, 0.85098)',
-        headerStyle: {backgroundColor: 'white'},
-        title: '設定',
-        tabBarLabel: '設定',
-        tabBarIcon: ({tintColor}) => (
-            <Icon name={'ios-settings'} size={24} style={{color: tintColor}}/>
-        )
+    static navigationOptions = ({navigation})=>{
+        const {params = {}} = navigation.state;
+        return {
+            headerTintColor: 'rgba(0, 0, 0, 0.85098)',
+            headerStyle: {backgroundColor: 'white'},
+            title: '設定',
+            tabBarLabel: '設定',
+            tabBarIcon: ({tintColor}) => (
+                <Icon name={'ios-settings'} size={24} style={{color: tintColor}}/>
+            ),
+            tabBarOnPress:(routeParams)=>{
+                params.set_tab_index(routeParams.scene.index);
+                routeParams.jumpToIndex(3)
+            },
+        }
     };
 
     constructor(props) {
@@ -29,10 +36,16 @@ export default class UserCenter extends React.Component {
         this.switchModal = this.switchModal.bind(this);
         this.startLogin = this.startLogin.bind(this);
         this.logout = this.logout.bind(this);
+        this.set_tab_index = this.set_tab_index.bind(this);
+        this.props.navigation.setParams({set_tab_index:this.set_tab_index})
     }
 
     componentDidMount(){
         this.props.getUserFromLocal()
+    }
+
+    set_tab_index(index){
+        this.props.setTabIndex(index)
     }
 
     /** 2017/12/22
