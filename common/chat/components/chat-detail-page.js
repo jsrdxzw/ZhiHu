@@ -12,7 +12,7 @@ import KeyboardSpacer from 'react-native-keyboard-spacer';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {connect} from 'react-redux';
 import MessageItem from "./message-item";
-import {read_special_message,set_current_chater,clear_chatter} from '../actions';
+import {read_special_message, set_current_chater, clear_chatter} from '../actions';
 import {getMyHistoryMessage, sendMyMessage} from "../../utils/rest";
 import moment from "moment/moment";
 
@@ -48,13 +48,13 @@ class ChatPage extends React.Component {
         this.props.navigation.setParams({receiver: this.chatUser})
     }
 
-    componentWillReceiveProps(nextProps){
-        if(nextProps.messages&&nextProps.messages!==this.props.messages&&nextProps.messages.sender===this.chatUser._id){
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.messages && nextProps.messages !== this.props.messages && nextProps.messages.sender === this.chatUser._id) {
             this.loadingMore = false;
             let newMessage = nextProps.messages;
             const created_at = nextProps.messages.created_at;
             const messages = this.state.messages;
-            if(messages.length) {
+            if (messages.length) {
                 const diff = moment(created_at).diff(moment(messages[messages.length - 1].created_at), 'minutes');
                 if (diff >= 5 && diff < 60 * 24) {
                     newMessage = {...newMessage, time: moment(created_at).format('a h:mm')};
@@ -62,7 +62,7 @@ class ChatPage extends React.Component {
                     newMessage = {...newMessage, time: moment(created_at).format('lll')};
                 }
             }
-            if(this._isMounted) {
+            if (this._isMounted) {
                 this.setState((prevState, props) => ({
                     count: prevState.count + 1,
                     messages: [...prevState.messages, newMessage]
@@ -80,8 +80,8 @@ class ChatPage extends React.Component {
         this.loadMoreMessage();
     }
 
-    componentDidUpdate(){
-        if(!this.loadingMore) {
+    componentDidUpdate() {
+        if (!this.loadingMore) {
             this._flatList.scrollToEnd()
         }
     }
@@ -103,14 +103,16 @@ class ChatPage extends React.Component {
                 sendMessage = {...sendMessage, time: moment(created_at).format('lll')};
             }
         }
-        if(this._isMounted) {
+        if (this._isMounted) {
             this.setState({
                 count: this.state.count + 1,
                 messages: [...this.state.messages, sendMessage]
             });
         }
         sendMyMessage(content, sender, this.chatUser._id)
-            .then(() => {}).catch(err => {})
+            .then(() => {
+            }).catch(err => {
+        })
     }
 
     /** 2018/1/18
@@ -119,15 +121,15 @@ class ChatPage extends React.Component {
      */
     refresh() {
         this.loadingMore = true;
-       this.loadMoreMessage();
+        this.loadMoreMessage();
     }
 
-    focusInput(){
+    focusInput() {
         this.loadingMore = false;
         this._flatList.scrollToEnd();
     }
 
-    loadMoreMessage(){
+    loadMoreMessage() {
         const sender = this.chatUser._id;
         const receiver = this.props.user._id;
         const count = this.state.count;
@@ -135,7 +137,7 @@ class ChatPage extends React.Component {
         if (count > loadLength || loadLength === 0) {
             getMyHistoryMessage(sender, receiver, loadLength)
                 .then(({count, data}) => {
-                    if(this._isMounted) {
+                    if (this._isMounted) {
                         this.setState({
                             count,
                             messages: [...data, ...this.state.messages],
@@ -143,11 +145,11 @@ class ChatPage extends React.Component {
                         });
                     }
                 }).catch(err => {
-                    if(this._isMounted) {
-                        this.setState({
-                            loading: false
-                        });
-                    }
+                if (this._isMounted) {
+                    this.setState({
+                        loading: false
+                    });
+                }
             })
         }
     }
@@ -155,29 +157,29 @@ class ChatPage extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                    <FlatList
-                        ref={(flatList)=>this._flatList=flatList}
-                        onRefresh={this.refresh}
-                        refreshing={this.state.loading}
-                        data={this.state.messages}
-                        keyExtractor={(item, index) => item._id || index}
-                        renderItem={({item}) => <MessageItem message={item} chatUser={this.chatUser}/>}
-                        ListEmptyComponent={
-                            <View style={styles.emptyContainer}><Text>没有任何消息</Text></View>
-                        }
-                        ListHeaderComponent={
-                            <View style={styles.headerContainer}/>
-                        }
-                    />
+                <FlatList
+                    ref={(flatList) => this._flatList = flatList}
+                    onRefresh={this.refresh}
+                    refreshing={this.state.loading}
+                    data={this.state.messages}
+                    keyExtractor={(item, index) => item._id || index}
+                    renderItem={({item}) => <MessageItem message={item} chatUser={this.chatUser}/>}
+                    ListEmptyComponent={
+                        <View style={styles.emptyContainer}><Text>没有任何消息</Text></View>
+                    }
+                    ListHeaderComponent={
+                        <View style={styles.headerContainer}/>
+                    }
+                />
                 <ChatFooter sendMessage={this.sendMessage} focusInput={this.focusInput}/>
-                {Platform.OS==='ios'?<KeyboardSpacer/>:null}
+                {Platform.OS === 'ios' ? <KeyboardSpacer/> : null}
             </View>
         );
     }
 
-    componentWillUnmount(){
-          this.props.clear_chatter();
-          this._isMounted = false
+    componentWillUnmount() {
+        this.props.clear_chatter();
+        this._isMounted = false
     }
 
 }
@@ -185,15 +187,15 @@ class ChatPage extends React.Component {
 const mapStateToProps = state => {
     return {
         user: state.user,
-        messages:state.messages.messages
+        messages: state.messages.messages
     }
 };
 
-const mapStateFromProps = dispatch=>{
-    return{
-        read_special_message:()=>dispatch(read_special_message()),
-        set_current_chater:(chatter_id)=>dispatch(set_current_chater(chatter_id)),
-        clear_chatter:()=>dispatch(clear_chatter())
+const mapStateFromProps = dispatch => {
+    return {
+        read_special_message: () => dispatch(read_special_message()),
+        set_current_chater: (chatter_id) => dispatch(set_current_chater(chatter_id)),
+        clear_chatter: () => dispatch(clear_chatter())
     }
 };
 
@@ -210,7 +212,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 5
     },
-    headerContainer:{
+    headerContainer: {
         padding: 7,
     }
 });

@@ -202,7 +202,7 @@ export const refreshQuestion = (type, id) => {
 };
 
 
-export const ifConcernUser = (otherId) => {
+export const ifConcernOtherAndLikeOther = (otherId) => {
     const userId = Store.getState().user._id;
     if (userId !== otherId) { //本人不好关注
         return fetchUrl('/api/user/ifConcern', 'post', {userId, otherId})
@@ -210,9 +210,7 @@ export const ifConcernUser = (otherId) => {
                 const {err, data} = res;
                 if (!err) {
                     if (data) {
-                        return Promise.resolve(true)
-                    } else {
-                        return Promise.resolve(false)
+                        return Promise.resolve(data)
                     }
                 } else {
                     return Promise.reject('error')
@@ -224,6 +222,21 @@ export const ifConcernUser = (otherId) => {
         return Promise.reject('error')
     }
 
+};
+
+export const likeOrDislikeUser = (otherId,status)=>{
+    const userId = Store.getState().user._id;
+    return fetchUrl(`/api/user/likeOrDislikeUser`, 'post', {userId, otherId,status})
+        .then(res => {
+            const {err} = res;
+            if (!err) {
+                return Promise.resolve();
+            } else {
+                return Promise.reject('error')
+            }
+        }).catch(err => {
+            return Promise.reject('error')
+        })
 };
 
 export const concernUser = (otherId) => {

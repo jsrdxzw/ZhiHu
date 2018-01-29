@@ -1,19 +1,22 @@
 import React from 'react';
-import {View, Text, StyleSheet, Image, ScrollView} from 'react-native';
+import {View, Text, StyleSheet, Image, ScrollView, TouchableOpacity} from 'react-native';
 import ItemCard from "../components/item-card";
 import Icon from 'react-native-vector-icons/Ionicons';
 import ConcernButton from "../../common-component/concernButton";
-import {ifConcernUser, concernUser, cancelConcernUser} from '../../utils/rest';
+import {ifConcernOtherAndLikeOther, concernUser, cancelConcernUser,likeOrDislikeUser} from '../../utils/rest';
 
 
 export default class OtherUserPage extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-            concern: null
+            concern: null,
+            like: null, //#d9d9d9
+            likeCount:props.navigation.state.params.user.likeCount
         };
         this.concern = this.concern.bind(this);
         this.cancelConcern = this.cancelConcern.bind(this);
+        this.likeOther = this.likeOther.bind(this);
     }
 
     static navigationOptions = ({navigation}) => {
@@ -27,6 +30,24 @@ export default class OtherUserPage extends React.PureComponent {
         this.ifConcernOther()
     }
 
+    //喜欢别人或者不喜欢
+    likeOther() {
+        const {user} = this.props.navigation.state.params;
+        if(this.state.like){ //表示将取消喜欢
+            this.setState({
+                like:false,
+                likeCount:this.state.likeCount-1
+            });
+            likeOrDislikeUser(user._id,0).then(()=>{}).catch(err=>{})
+        } else {   //将喜欢
+            this.setState({
+                like:true,
+                likeCount:this.state.likeCount+1
+            });
+            likeOrDislikeUser(user._id,1).then(()=>{}).catch(err=>{})
+        }
+    }
+
     render() {
         const {user} = this.props.navigation.state.params;
         return (
@@ -38,15 +59,16 @@ export default class OtherUserPage extends React.PureComponent {
                                    source={{uri: `data:image/png;base64,${user.avatar}`}}
                             />
                             <View style={{marginLeft: 10, flex: 1}}>
-                                <View style={{flexDirection:'row',alignItems:'center'}}>
-                                    {user.gender ? <Icon name={user.gender === '男' ? 'md-male' : 'md-female'} size={14} style={{
-                                        paddingTop: 2,
-                                        marginRight:10,
-                                        color: user.gender === '男' ? '#1890ff' : '#f759ab'
-                                    }}/> : null}
-                                <Text>
-                                    {user.description}
-                                </Text>
+                                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                                    {user.gender ?
+                                        <Icon name={user.gender === '男' ? 'md-male' : 'md-female'} size={14} style={{
+                                            paddingTop: 2,
+                                            marginRight: 10,
+                                            color: user.gender === '男' ? '#1890ff' : '#f759ab'
+                                        }}/> : null}
+                                    <Text>
+                                        {user.description}
+                                    </Text>
                                 </View>
                                 <View style={{backgroundColor: '#e8e8e8', height: 1, marginTop: 6}}/>
                                 <View style={{
@@ -56,15 +78,17 @@ export default class OtherUserPage extends React.PureComponent {
                                     marginTop: 6
                                 }}>
                                     <View style={styles.infoTips}>
-                                        <Text style={styles.count}>22</Text>
+                                        <Text style={styles.count}>{user.answercount > 0 ? user.answercount : 0}</Text>
                                         <Text style={styles.title}>他的回答</Text>
                                     </View>
                                     <View style={styles.infoTips}>
-                                        <Text style={styles.count}>{user.followercount}</Text>
+                                        <Text
+                                            style={styles.count}>{user.followercount > 0 ? user.followercount : 0}</Text>
                                         <Text style={styles.title}>他关注的人</Text>
                                     </View>
                                     <View style={styles.infoTips}>
-                                        <Text style={styles.count}>{user.befollowercount}</Text>
+                                        <Text
+                                            style={styles.count}>{user.befollowercount > 0 ? user.befollowercount : 0}</Text>
                                         <Text style={styles.title}>关注他的人</Text>
                                     </View>
                                 </View>
@@ -79,14 +103,21 @@ export default class OtherUserPage extends React.PureComponent {
                         <View style={{flex: 1, height: 1, backgroundColor: '#e8e8e8'}}/>
                         <View style={styles.infoFooter}>
                             <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                                <Icon name={'md-thumbs-up'} color={'#d9d9d9'} size={16}/>
-                                <Text style={{marginLeft: 5, color: 'rgba(0, 0, 0, 0.65098)'}}>{6}</Text>
+
+                                <TouchableOpacity style={{padding: 4}} onPress={this.likeOther} disabled={this.state.like===null}>
+                                    <Icon name={'md-thumbs-up'} color={this.state.like?'#506EF2':'#d9d9d9'} size={18}/>
+                                </TouchableOpacity>
+
+                                <Text style={{
+                                    marginLeft: 5,
+                                    color: 'rgba(0, 0, 0, 0.65098)'
+                                }}>{this.state.likeCount || 0}</Text>
                             </View>
                             {this.state.concern === null ? null :
                                 <ConcernButton ifConcern={this.state.concern}
                                                concern={this.concern}
                                                cancelConcern={this.cancelConcern}
-                                               title={'关注'+(user.gender==='男'?'他':'她')}
+                                               title={'关注' + (user.gender === '男' ? '他' : '她')}
                                 />
                             }
                         </View>
@@ -96,7 +127,8 @@ export default class OtherUserPage extends React.PureComponent {
                                   type={'question'} userId={user._id}/>
                         <ItemCard title={'他的关注'} to={'myQuestionList'} navigation={this.props.navigation}
                                   type={'concern'} userId={user._id}/>
-                        <ItemCard title={'他的回答'} to={'myQuestionList'} navigation={this.props.navigation} type={'answer'} userId={user._id}/>
+                        <ItemCard title={'他的回答'} to={'myQuestionList'} navigation={this.props.navigation}
+                                  type={'answer'} userId={user._id}/>
                     </View>
                 </View>
             </ScrollView>
@@ -111,11 +143,13 @@ export default class OtherUserPage extends React.PureComponent {
 
     ifConcernOther() {
         const {user} = this.props.navigation.state.params;
-        ifConcernUser(user._id)
-            .then(concern => {
-                this.setState({
-                    concern: concern
-                })
+        ifConcernOtherAndLikeOther(user._id)
+            .then(data => {
+                const [ifConcern,ifLike] = data;
+                    this.setState({
+                        concern: !!ifConcern,
+                        like:!!ifLike
+                    })
             }, err => {
 
             })
