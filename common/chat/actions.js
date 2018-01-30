@@ -11,6 +11,7 @@ const SET_CHATTER = 'SET_CHATTER';
 const CLEAR_CHATTER = 'CLEAR_CHATTER';
 const RECEIVE_MESSAGE_INTIME_NOUNREAD = 'RECEIVE_MESSAGE_INTIME_NOUNREAD';
 const CLEAR_UNREAD = 'CLEAR_UNREAD';
+const SET_CACHE_MESSAGES = 'SET_CACHE_MESSAGES';
 
 function send_message(sendMessage) {
     return {
@@ -69,6 +70,25 @@ export function set_current_chater(chatter) {
 export function clear_chatter() {
     return{
         type:CLEAR_CHATTER
+    }
+}
+
+/** 2018/1/30
+ * author: XU ZHI WEI
+ * function: sender 发送者id，messages为数组
+ */
+export function set_cache_messages(sender,messages) {
+    const cacheMessages = Store.getState().messages.cacheMessages;
+    if(Object.keys(cacheMessages).length>50){
+        return {
+            type:SET_CACHE_MESSAGES,
+            payload:{sender,messages,ifClear:true}
+        }
+    }else {
+        return {
+            type:SET_CACHE_MESSAGES,
+            payload:{sender,messages,ifClear:false}
+        }
     }
 }
 

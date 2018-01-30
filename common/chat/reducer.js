@@ -8,7 +8,7 @@ const initState = {
     messages:null, //这个是临时传送的消息
     currentChatter:null,
     unReadCount:0,
-
+    cacheMessages:{} //缓存初始信息，用户不用每次加载，大于1000则清空
 };
 
 const reducer = (state=initState,action)=>{
@@ -25,6 +25,13 @@ const reducer = (state=initState,action)=>{
             return {...state,currentChatter:action.payload};
         case 'CLEAR_CHATTER':
             return {...state,currentChatter:null};
+        case 'SET_CACHE_MESSAGES':
+            if(action.payload.ifClear){
+                const newCacheMessages = delete state.cacheMessages[Object.keys(state.cacheMessages)[0]];
+                return {...state,cacheMessages:{...newCacheMessages,[action.payload.sender]:action.payload.messages}}
+            } else {
+                return {...state,cacheMessages:{...state.cacheMessages,[action.payload.sender]:action.payload.messages}}
+            }
         // case 'SEND_MESSAGE':
         //     return {...state,messages:[...state.messages,action.payload],count:state.count+1};
         // case 'LOADING_MORE':

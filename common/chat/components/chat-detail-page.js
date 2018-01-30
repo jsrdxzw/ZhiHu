@@ -12,7 +12,7 @@ import KeyboardSpacer from 'react-native-keyboard-spacer';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {connect} from 'react-redux';
 import MessageItem from "./message-item";
-import {read_special_message, set_current_chater, clear_chatter} from '../actions';
+import {read_special_message, set_current_chater, clear_chatter,set_cache_messages} from '../actions';
 import {getMyHistoryMessage, sendMyMessage} from "../../utils/rest";
 import moment from "moment/moment";
 
@@ -24,8 +24,11 @@ class ChatPage extends React.Component {
             title: params.receiver.name,
             headerRight:
                 <TouchableOpacity>
-                    <Icon name={'ios-person'} size={26}
-                          style={{color: '#000', marginRight: 10, paddingTop: 2}}/>
+                    <Icon
+                        name={'ios-person'}
+                        size={26}
+                        style={{color: '#000', marginRight: 10, paddingTop: 2}}
+                    />
                 </TouchableOpacity>,
         }
     };
@@ -77,7 +80,9 @@ class ChatPage extends React.Component {
         this.loadingMore = false;
         this._isMounted = true;
         this.props.set_current_chater(this.chatUser._id);
-        this.loadMoreMessage();
+        if(!this.props.cacheMessages[this.chatUser._id]){
+            this.loadMoreMessage();
+        }
     }
 
     componentDidUpdate() {
@@ -187,7 +192,8 @@ class ChatPage extends React.Component {
 const mapStateToProps = state => {
     return {
         user: state.user,
-        messages: state.messages.messages
+        messages: state.messages.messages,
+        cacheMessages:state.messages.cacheMessages
     }
 };
 

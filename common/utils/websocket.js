@@ -5,6 +5,7 @@ import Store from '../Store';
 const baseUrl = 'http://192.168.1.89:3333/chat';
 
 let socket = null;
+let joined = false;
 
 
 function startListener() {
@@ -18,9 +19,12 @@ function startListener() {
 }
 
 export const connectSocket = (id) => {
-    socket = io.connect(baseUrl);
-    socket.emit('join room', {id});
-    startListener()
+    if(!joined) {
+        socket = io.connect(baseUrl);
+        socket.emit('join room', {id});
+        startListener();
+        joined = true
+    }
 };
 
 export const disConnectSocket = (id) => {
