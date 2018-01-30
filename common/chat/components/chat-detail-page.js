@@ -24,7 +24,7 @@ class ChatPage extends React.Component {
         return {
             title: params.receiver.name,
             headerRight:
-                <TouchableOpacity>
+                <TouchableOpacity onPress={params.gotoDetailUser&&params.gotoDetailUser}>
                     <Icon
                         name={'ios-person'}
                         size={26}
@@ -45,6 +45,8 @@ class ChatPage extends React.Component {
         this.sendMessage = this.sendMessage.bind(this);
         this.refresh = this.refresh.bind(this);
         this.focusInput = this.focusInput.bind(this);
+        this.gotoDetailUser = this.gotoDetailUser.bind(this);
+        this.props.navigation.setParams({gotoDetailUser:this.gotoDetailUser});
         this.chatUser = this.props.navigation.state.params.receiver;
     }
 
@@ -75,6 +77,10 @@ class ChatPage extends React.Component {
             }
             this.props.read_special_message();
         }
+    }
+
+    gotoDetailUser(){
+        this.props.navigation.navigate('otherUserPage',{user:this.chatUser})
     }
 
 

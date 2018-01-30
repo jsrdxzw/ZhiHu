@@ -24,7 +24,6 @@ project.xcworkspace
 
 # Android/IntelliJ
 #
-build/
 .idea
 .gradle
 local.properties
@@ -54,4 +53,7 @@ buck-out/
 
 test.js
 
-
+android/
+ios/
+__tests__/
+.vscode/
