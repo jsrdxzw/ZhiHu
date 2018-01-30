@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, StyleSheet, Text, Image, TouchableOpacity} from 'react-native';
 import {withNavigation} from 'react-navigation';
+import {receiver_timely_message,get_cache_messages} from '../../utils/cache';
 import {connect} from 'react-redux';
 
 class ChatItem extends React.PureComponent {
@@ -29,13 +30,16 @@ class ChatItem extends React.PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        if ((nextProps.messages.messages && !nextProps.messages.currentChatter) || (nextProps.messages.messages && nextProps.messages.currentChatter !== this.props.user._id)) {
-
-            if (nextProps.messages.messages.sender === this.props.user._id &&nextProps.messages.messages!==this.props.messages.messages) {
+        const chatUser = this.props.user._id;
+        if ((nextProps.messages.messages && !nextProps.messages.currentChatter) || (nextProps.messages.messages && nextProps.messages.currentChatter !== chatUser)) {
+            if (nextProps.messages.messages.sender === chatUser &&nextProps.messages.messages!==this.props.messages.messages) {
                 if(this._isMounted) {
                     this.setState((prevState, props) => ({
                         unReadCount: prevState.unReadCount + 1
                     }));
+                    if(get_cache_messages(chatUser)){
+                        receiver_timely_message(chatUser,nextProps.messages.messages)
+                    }
                 }
             }
         }

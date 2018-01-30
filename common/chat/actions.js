@@ -77,20 +77,20 @@ export function clear_chatter() {
  * author: XU ZHI WEI
  * function: sender 发送者id，messages为数组
  */
-export function set_cache_messages(sender,messages) {
-    const cacheMessages = Store.getState().messages.cacheMessages;
-    if(Object.keys(cacheMessages).length>50){
-        return {
-            type:SET_CACHE_MESSAGES,
-            payload:{sender,messages,ifClear:true}
-        }
-    }else {
-        return {
-            type:SET_CACHE_MESSAGES,
-            payload:{sender,messages,ifClear:false}
-        }
-    }
-}
+// export function set_cache_messages(sender,messages,count) {
+//     const cacheMessages = Store.getState().messages.cacheMessages;
+//     if(Object.keys(cacheMessages).length>50){
+//         return {
+//             type:SET_CACHE_MESSAGES,
+//             payload:{sender,messages,count,ifClear:true}
+//         }
+//     }else {
+//         return {
+//             type:SET_CACHE_MESSAGES,
+//             payload:{sender,messages,count,ifClear:false}
+//         }
+//     }
+// }
 
 export const sendMessage = (content, receiver) => {
     return (dispatch, getState) => {
