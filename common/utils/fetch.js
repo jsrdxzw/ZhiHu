@@ -1,6 +1,6 @@
 import {Toast} from 'antd-mobile';
 
-const baseUrl = 'http://192.168.1.89:3333'; //api的服务器地址
+const baseUrl = 'http://120.79.155.174:3333'; //api的服务器地址
 
 const fetchURL = (subUrl, method, params) => {
     const url = baseUrl + subUrl;

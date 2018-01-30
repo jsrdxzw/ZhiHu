@@ -24,6 +24,9 @@ export default class RemenComponent extends React.Component {
     }
 
     refresh(){
+        this.setState({
+            loading:true
+        });
         getHotQuestion(0).then(res=>{
             const {data,count} = res;
             if(this._isMounted) {

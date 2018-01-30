@@ -24,6 +24,9 @@ export default class ZuiXinComponent extends React.Component {
     }
 
     refresh(){
+        this.setState({
+            loading:true
+        });
         refreshLastestQuestion().then(res=>{
             const {data,count} = res;
             if(this._isMounted) {
@@ -93,13 +96,13 @@ export default class ZuiXinComponent extends React.Component {
                 this.setState({
                     questions: [...this.state.questions, ...data],
                     count: count,
-                    loadingMore: false
+                    loadingMore: false,
                 });
             }
             this.isLoading = false;
         },err=>{
             this.setState({
-                loadingMore: false
+                loadingMore: false,
             });
             this.isLoading = false;
         })

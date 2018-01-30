@@ -24,6 +24,9 @@ export default class GuanZhuComponent extends React.Component {
     }
 
     refresh(){
+        this.setState({
+            loading:true
+        });
         refreshConcernQuestion().then(res=>{
             const {data,count} = res;
             if(this._isMounted) {
