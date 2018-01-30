@@ -1,6 +1,6 @@
 import {Toast} from 'antd-mobile';
 // 120.79.155.174
-export const baseUrl = 'http://120.79.155.174:3333';
+export const baseUrl = 'http://192.168.1.89:3333';
 
 export const uploadImage = (url,title,detail,noName,authorID,path)=>{
     const data = new FormData();

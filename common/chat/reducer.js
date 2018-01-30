@@ -5,9 +5,10 @@
 // };
 
 const initState = {
-    messages:null,
+    messages:null, //这个是临时传送的消息
     currentChatter:null,
-    unReadCount:0
+    unReadCount:0,
+
 };
 
 const reducer = (state=initState,action)=>{
