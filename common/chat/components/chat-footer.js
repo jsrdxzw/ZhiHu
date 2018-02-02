@@ -50,7 +50,7 @@ export default class ChatFooter extends React.Component {
                            autoCapitalize={'none'}
                            multiline={true}
                            value={this.state.text}
-                           placeholder={'请输入评论'}
+                           placeholder={'请输入内容'}
                            maxHeight={150}
                            onChangeText={this.changeText}
                            clearButtonMode={'while-editing'}

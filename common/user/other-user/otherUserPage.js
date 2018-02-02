@@ -12,7 +12,8 @@ export default class OtherUserPage extends React.PureComponent {
         this.state = {
             concern: null,
             like: null, //#d9d9d9
-            likeCount:props.navigation.state.params.user.likeCount
+            likeCount:0,
+            user:null
         };
         this.concern = this.concern.bind(this);
         this.cancelConcern = this.cancelConcern.bind(this);
@@ -78,17 +79,17 @@ export default class OtherUserPage extends React.PureComponent {
                                     marginTop: 6
                                 }}>
                                     <View style={styles.infoTips}>
-                                        <Text style={styles.count}>{user.answercount > 0 ? user.answercount : 0}</Text>
+                                        <Text style={styles.count}>{this.state.user?this.state.user.answercount||0 : 0}</Text>
                                         <Text style={styles.title}>他的回答</Text>
                                     </View>
                                     <View style={styles.infoTips}>
                                         <Text
-                                            style={styles.count}>{user.followercount > 0 ? user.followercount : 0}</Text>
+                                            style={styles.count}>{this.state.user?this.state.user.followercount||0 : 0}</Text>
                                         <Text style={styles.title}>他关注的人</Text>
                                     </View>
                                     <View style={styles.infoTips}>
                                         <Text
-                                            style={styles.count}>{user.befollowercount > 0 ? user.befollowercount : 0}</Text>
+                                            style={styles.count}>{this.state.user?this.state.user.befollowercount||0 : 0}</Text>
                                         <Text style={styles.title}>关注他的人</Text>
                                     </View>
                                 </View>
@@ -111,7 +112,7 @@ export default class OtherUserPage extends React.PureComponent {
                                 <Text style={{
                                     marginLeft: 5,
                                     color: 'rgba(0, 0, 0, 0.65098)'
-                                }}>{this.state.likeCount || 0}</Text>
+                                }}>{this.state.likeCount}</Text>
                             </View>
                             {this.state.concern === null ? null :
                                 <ConcernButton ifConcern={this.state.concern}
@@ -143,12 +144,14 @@ export default class OtherUserPage extends React.PureComponent {
 
     ifConcernOther() {
         const {user} = this.props.navigation.state.params;
-        ifConcernOtherAndLikeOther(user._id)
+        ifConcernOtherAndLikeOther(user._id) //也要把点赞数和关注人数等数据拿到
             .then(data => {
-                const [ifConcern,ifLike] = data;
+                const [ifConcern,ifLike,user] = data;
                     this.setState({
                         concern: !!ifConcern,
-                        like:!!ifLike
+                        like:!!ifLike,
+                        user:user,
+                        likeCount:user.likeCount||0
                     })
             }, err => {
 

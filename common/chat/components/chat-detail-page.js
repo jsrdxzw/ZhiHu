@@ -129,9 +129,7 @@ class ChatPage extends React.Component {
             });
             receiver_timely_message(this.chatUser._id, sendMessage);
         }
-        sendMyMessage(content, sender, this.chatUser._id)
-            .then(() => {
-            }).catch(err => {
+        sendMyMessage(content, sender, this.chatUser._id).then(() => {}).catch(err => {
         })
     }
 
@@ -186,7 +184,7 @@ class ChatPage extends React.Component {
                     refreshing={this.state.loading}
                     data={this.state.messages}
                     keyExtractor={(item, index) => item._id || index}
-                    renderItem={({item}) => <MessageItem message={item} chatUser={this.chatUser}/>}
+                    renderItem={({item}) => <MessageItem message={item} chatUser={this.chatUser} user={this.props.user}/>}
                     ListEmptyComponent={
                         <View style={styles.emptyContainer}><Text>没有任何消息</Text></View>
                     }

@@ -1,6 +1,5 @@
 import React from 'react';
 import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
-import {connect} from 'react-redux';
 import {withNavigation} from 'react-navigation';
 
 class MessageItem extends React.PureComponent {
@@ -70,13 +69,7 @@ class MessageItem extends React.PureComponent {
     }
 }
 
-const mapStateToProps = state => {
-    return {
-        user: state.user
-    }
-};
-
-export default connect(mapStateToProps, null)(withNavigation(MessageItem))
+export default withNavigation(MessageItem)
 
 const styles = StyleSheet.create({
     container: {

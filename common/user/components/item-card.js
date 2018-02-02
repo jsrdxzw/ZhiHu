@@ -32,7 +32,7 @@ class ItemCard extends React.PureComponent {
             <TouchableOpacity onPress={this.nextPage}>
                 <View style={styles.container}>
                     <View style={styles.leftContainer}>
-                        <Icon name={this.getIconName(type)} size={22} color={'#506EF2'}/>
+                        {this.getIcon(type)}
                         <Text style={styles.titleStyle}>{title}</Text>
                     </View>
                     {rightRender ?
@@ -54,16 +54,16 @@ class ItemCard extends React.PureComponent {
         )
     }
 
-    getIconName(type) {
+    getIcon(type) {
         switch (type){
             case 'question':
-                return 'ios-book';
+                return <Icon name={'ios-book'} size={22} color={'#506EF2'}/>;
             case 'concern':
-                return 'md-eye';
+                return <Icon name={'md-eye'} size={22} color={'#506EF2'}/>;
             case 'answer':
-                return 'md-bookmarks';
+                return <Icon name={'md-bookmarks'} size={22} color={'#506EF2'}/>;
             case 'collection':
-                return 'md-cube';
+                return <Icon name={'md-cube'} size={22} color={'#506EF2'}/>;
             default:
                 return null;
         }
