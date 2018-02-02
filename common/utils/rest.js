@@ -5,6 +5,7 @@ import {connectSocket, sendMessage} from './websocket';
 import {getDistance} from './math';
 import {AsyncStorage} from "react-native";
 import {uploadImage} from './uploadImage';
+import {getCurrentUser} from './storage';
 
 
 export const getLastestQuestion = (skipCount) => {
@@ -48,6 +49,17 @@ export const refreshLastestQuestion = () => {
  */
 export const getConcernQuestion = (skipCount) => {
     const user_id = Store.getState().user._id;
+    if(!user_id){
+        return getCurrentUser().then(user=>{
+            return getConcernFromApi(skipCount,user._id)
+        })
+    } else {
+        return getConcernFromApi(skipCount,user_id)
+    }
+
+};
+
+function getConcernFromApi(skipCount,user_id){
     return fetchUrl(`/api/question/concernQst?skipCount=${skipCount}`, 'post', {user_id})
         .then(res => {
             const {err, data, count} = res;
@@ -63,7 +75,9 @@ export const getConcernQuestion = (skipCount) => {
         .catch(err => {
             return Promise.reject('error')
         })
-};
+}
+
+//
 
 export const refreshConcernQuestion = () => {
     const user_id = Store.getState().user._id;
@@ -645,6 +659,9 @@ export const submitQuestion = (title,detail,noName,path)=>{
             }).catch(err=>{})
         }
 };
+
+
+
 
 
 

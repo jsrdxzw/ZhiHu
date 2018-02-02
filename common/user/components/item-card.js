@@ -65,7 +65,7 @@ class ItemCard extends React.PureComponent {
             case 'collection':
                 return 'md-cube';
             default:
-                return 'md-document';
+                return null;
         }
     }
 }

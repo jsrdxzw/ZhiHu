@@ -1,5 +1,5 @@
 import {Toast} from 'antd-mobile';
-export const baseUrl = 'http://192.0.1.5:3333';
+export const baseUrl = 'http://localhost:3333';
 
 export const uploadImage = (url,title,detail,noName,authorID,path)=>{
     const data = new FormData();

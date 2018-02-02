@@ -2,7 +2,7 @@ import io from 'socket.io-client';
 import {actions} from '../chat';
 import Store from '../Store';
 
-const baseUrl = 'http://192.0.1.5:3333/chat';
+const baseUrl = 'http://localhost:3333/chat';
 
 let socket = null;
 let joined = false;

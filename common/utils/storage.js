@@ -92,3 +92,7 @@ export const deleteOneHistory = (history) => {
 export const deleteAllHistory = ()=>{
     AsyncStorage.removeItem('history').then(()=>{})
 };
+
+export const getCurrentUser = ()=>{
+    return AsyncStorage.getItem('user').then(res=>JSON.parse(res));
+};
